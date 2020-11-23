@@ -1,6 +1,7 @@
 # TeX auxiliary files #
 #######################
 # Ignore the output pdfs
+labNotebook.pdf
 
 # Ignore simulation videos as they are too large
 *.avi
