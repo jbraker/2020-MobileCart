@@ -2,6 +2,9 @@
 #######################
 # Ignore the output pdfs
 
+# Ignore simulation videos as they are too large
+*.avi
+
 # TeX auxiliary files #
 #######################
 *.aux
