@@ -5,6 +5,9 @@
 # Ignore simulation videos as they are too large
 *.avi
 
+# Matlab autosave files
+*.asv
+
 # TeX auxiliary files #
 #######################
 *.aux
