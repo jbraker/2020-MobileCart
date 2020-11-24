@@ -52,7 +52,7 @@ Q = [sigmaV^2 0; 0 sigmaW^2]; % Process noise covariance matrix
 
 % Observation parameters
 MAX_RANGE = 30.0; % [m], Maximum sensing distance
-DT_OBSERVE = 8*T; % [s], Time interval between observations
+DT_OBSERVE = 2*T; % [s], Time interval between observations
 dtsum = 0; % [s], Change in time since last observation (Set to DT_OBSERVE to force observation on first iteration
 
 % Observation noises
@@ -174,6 +174,7 @@ while not(simComplete(k, 2*numSteps))
     QRTrueDT(:, k) = qrTrue;
     
     % Plot the remote
+    plot(remTraj(1, :), remTraj(2, :), '--', 'Color', 0.85*[1 1 1], 'DisplayName', 'Remote trajectory');
     plot(qrTrue(1), qrTrue(2), 'b^', 'DisplayName', 'Actual remote position');
     plot(qr(1), qr(2), 'r^', 'DisplayName', 'Estimated remote position');
     % Plot the trajectory

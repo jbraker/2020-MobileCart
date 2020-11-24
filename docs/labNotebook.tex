@@ -234,6 +234,18 @@ Today I worked some more on the Matlab simulation. I changed the code to use a d
 
 After some debugging, I discovered that the coordinates of the remote were in the robot's local frame, but were used as if they were in the global frame. I updated the coordinate calculation to find global coordinates, and the robot was able to estimate the position of the remote.
 
+I noticed that the true position of the robot was being used to compute the control inputs $v$ and $\omega$. Since the robot does not know its true position, I decided that it should be using the estimated position instead. When I did that, the robot got quite far off on its estimate of the position, but the actual robot still generally followed the remote. I thought maybe getting observations more frequently would help the estimate be more accurate. Since the time between observations was set at 8 seconds for a single sensor with a reflector, I decided to change it to 2 seconds since using four reflectors and sensors would require only 1/4 of the rotation needed to get the full measurement. When I used 2 seconds, the robot was able to accurately estimate its position and follow the remote.
+
+\experiment{CoppeliaSim Simulation}
+I also worked on putting together a CoppeliaSim simulation. I placed five beacons in a 10 [m] by 10 [m] region and defined the trajectory of the remote to follow the square with corners (2.5, 2.5), (-2.5, 2.5), (-2.5, -2.5), and (2.5, -2.5). Then I copied the code from the Matlab simulation and updated it to integrate into CoppeliaSim. Although the generated figure looks intriguing, I do not think I would like to have a shopping cart that follows me the way this one does. See \autoref{fig:incorrectCoppSim} for the results of the simulation as it is now. I will have to look more into this next time.
+
+\begin{figure}[h!]
+    \center
+    \includegraphics[width=4in]{figs/img/incorrectCoppeliaSimSimulation.png}
+    \caption{Current Result of CoppeliaSim Simulation}
+    \label{fig:incorrectCoppSim}
+\end{figure}
+
 \end{addmargin}
 
 \end{document}
