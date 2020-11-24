@@ -40,7 +40,8 @@ ftag = 1:size(lm, 2); % Identifier for each landmark
 da_table = zeros(1, size(lm, 2)); % Data association table
 
 % Control parameters
-v = 1; % [m/s], Constant linear velocity
+MAXV = 1; % [m/s], Maximum linear velocity (-MAXV < v < MAXV)
+KV = 1;
 MAXW = 20*pi/180; % [rad], Maximum angular velocity (-MAXW < w < MAXW)
 KW = 2; % Proportional gain for angular velocity
 
@@ -80,6 +81,8 @@ SWITCH_BATCH_UPDATE = 1; % If 1, process scan in batch, if 0, process sequential
 % Initial pose covariance estimate
 P_init = diag([(qTrue(1)-q(1))^2; (qTrue(2)-q(2))^2; (qTrue(3)-q(3))^2]);
 
+df = 1.5; % [m], Following distance
+
 % Initial observation
 % Get the range-bearing observations for the landmarks and remote
 [~, ~, zr] = get_observations(qTrue, lm, ftag, qrTrue, MAX_RANGE);  % tag ID (ftag) is necessary if data association is known.
@@ -87,6 +90,8 @@ P_init = diag([(qTrue(1)-q(1))^2; (qTrue(2)-q(2))^2; (qTrue(3)-q(3))^2]);
 zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
 % Convert remote observation to Cartesian coordinates
 qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
+% Calculate the target point (1 m closer than the remote)
+qt = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
 
 % Initialize vectors for recording values at each timestamp
 QDT(:,1) = q(1:3); % Estimated robot pose
@@ -99,7 +104,7 @@ QRTrueDT(:,1) = qrTrue; % Actual remote position
 fig = figure;
 
 % Create video writer
-vid = VideoWriter('OUT/trajectory.avi');
+vid = VideoWriter('OUT/trajectory.mp4', 'MPEG-4');
 vid.Quality = 100;
 vid.FrameRate = 10; 
 open(vid);
@@ -121,8 +126,15 @@ while not(simComplete(k, 2*numSteps))
     k = k + 1;
     
     %% Control inputs
-    % Compute steering angle based on true pose
-    w = compute_steering(qTrue, qr, KW, MAXW);
+    % Compute control inputs based on true pose
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %                       Should this use q or qTrue?                      %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    [v, w] = compute_control(q, qt, KV, KW, MAXV, MAXW);
     qTrue = vehicle_model(qTrue, v, w, T);
     
     % Add process noise
@@ -143,6 +155,8 @@ while not(simComplete(k, 2*numSteps))
         zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
         % Convert remote observation to Cartesian coordinates
         qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
+        % Calculate the target point (1 m closer than the remote)
+        qt = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
         
         [zf, idf, zn]= data_associate(q, P, z, RE, GATE_REJECT, GATE_AUGMENT);
         % zf = feature measurements with data association getReject < 4
@@ -546,22 +560,30 @@ function [q, P]= add_one_z(q, P, z, R)
     end
 end
 
-function w = compute_steering(q, qr, KW, maxW)
+function [v, w] = compute_control(q, qt, KV, KW, maxV, maxW)
     % INPUTS:
     %   q - True position of robot
-    %   qr - True position of remote
+    %   qt - True position of target point
+    %   KV - Proportional gain for v
+    %   KW - Proportional gain for w
+    %   maxV - Max linear velocity [m/s]
     %   maxW - Max angular velocity [rad/s]
     %   dt - Timestep
     %
     % OUTPUTS:
-    %   w - New angular velocity
+    %   v - Linear velocity
+    %   w - Angular velocity
+    
+    % Determine linear velocity
+    v = sign(cos(atan2(qt(2) - q(2), qt(1) - q(1)) - q(3)))*KV*norm(qt - q(1:2));
+    % Limit linear velocity
+    v = sign(v)*min(maxV, abs(v));
     
     % Compute angle to remote
-    thetaRef = atan2(qr(2) - q(2), qr(1) - q(1));
+    thetaRef = atan2(qt(2) - q(2), qt(1) - q(1));
 
     % Determine angular velocity
     w = KW*wrapToPi(thetaRef - q(3));
-    
     % Limit angular velocity
     w = sign(w)*min(abs(w), maxW);
 end
