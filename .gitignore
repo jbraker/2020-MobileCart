@@ -3,8 +3,9 @@
 # Ignore the output pdfs
 labNotebook.pdf
 
-# Ignore simulation videos as they are too large
+# Ignore simulation videos
 *.avi
+*.mp4
 
 # Matlab autosave files
 *.asv
