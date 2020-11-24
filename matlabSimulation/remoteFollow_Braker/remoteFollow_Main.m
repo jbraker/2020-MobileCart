@@ -5,8 +5,8 @@ clear; close all; clc;
 T = 0.25; % [s], Sampling time interval between control signals
 
 % Waypoints for the remote to follow
-wp = [2, 9.5, 10, -10 -15;
-      2, 8, 19, 29 2];
+wp = [4, 14.5, 8, -10 -18 22 4;
+      4, 8, 22, 29 -6 -8 4];
 % Remote trajectory
 remTraj = [];
 vr = 1; % [m/s] Remote velocity
@@ -32,7 +32,7 @@ qTrue = zeros(3, 1); % [m, m, rad]
 % Initialize estimated state of the robot
 q = [0.1; 0.1; 0.05]; % [m, m, rad]
 
-% Initialize state co-variance matrix 
+% Initialize state co-variance matrix
 P = diag((qTrue - q).^2);
 
 % Initialize other variables and constants
@@ -45,7 +45,7 @@ MAXW = 20*pi/180; % [rad], Maximum angular velocity (-MAXW < w < MAXW)
 KW = 2; % Proportional gain for angular velocity
 
 % Process (control) noise
-sigmaV = 0.3; % [m/s], Linear speed standard deviation 
+sigmaV = 0.3; % [m/s], Linear speed standard deviation
 sigmaW = (3.0*pi/180); % [rad], Steering angle standard deviation
 Q = [sigmaV^2 0; 0 sigmaW^2]; % Process noise covariance matrix
 
@@ -78,21 +78,15 @@ SWITCH_SENSOR_NOISE = 1; % if 0, measurements are perfect
 SWITCH_BATCH_UPDATE = 1; % If 1, process scan in batch, if 0, process sequentially
 
 % Initial pose covariance estimate
-P_init = diag([(qTrue(1)-q(1))^2;(qTrue(2)-q(2))^2;(qTrue(3)-q(3))^2]);
+P_init = diag([(qTrue(1)-q(1))^2; (qTrue(2)-q(2))^2; (qTrue(3)-q(3))^2]);
 
 % Initial observation
 % Get the range-bearing observations for the landmarks and remote
-[z, ftag_visible, zr] = get_observations(qTrue, lm, ftag, qrTrue, MAX_RANGE);  % tag ID (ftag) is necessary if data association is known.
-% Add noise to the landmark observations
-z = add_observation_noise(z, R, SWITCH_SENSOR_NOISE);
+[~, ~, zr] = get_observations(qTrue, lm, ftag, qrTrue, MAX_RANGE);  % tag ID (ftag) is necessary if data association is known.
 % Add noise to the remote observation
 zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
 % Convert remote observation to Cartesian coordinates
-qr = [zr(1)*cos(zr(2)); zr(1)*sin(zr(2))];
-
-[zf, idf, zn]= data_associate(q, P, z, RE, GATE_REJECT, GATE_AUGMENT);
-% zf = feature measurements with data association getReject < 4
-% zn = new feature measurements to be included.  distance > 25 [m]
+qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
 
 % Initialize vectors for recording values at each timestamp
 QDT(:,1) = q(1:3); % Estimated robot pose
@@ -107,21 +101,21 @@ fig = figure;
 % Create video writer
 vid = VideoWriter('OUT/trajectory.avi');
 vid.Quality = 100;
-vid.FrameRate = 5; 
+vid.FrameRate = 10; 
 open(vid);
 
 %% Main Loop
 k = 1; % Current timestep
-while not(simComplete(k, numSteps))
+while not(simComplete(k, 2*numSteps))
     % Clear the figure and plot the landmarks
     clf;
     hold on;
-    axis(50*[-1 1 -1 1]); pbaspect([1 1 1]);
+    axis([-50 50 -40 60]); pbaspect([1 1 1]);
     plot(lm(1, :), lm(2, :), 'b*');
     xlabel('X [m]'); ylabel('Y [m]');
     
     % Update remote position
-    qrTrue = remTraj(:, k);
+    qrTrue = remTraj(:, mod(k-1, numSteps)+1);
     
     % Advance timestep
     k = k + 1;
@@ -148,7 +142,7 @@ while not(simComplete(k, numSteps))
         % Add noise to the remote observation
         zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
         % Convert remote observation to Cartesian coordinates
-        qr = [zr(1)*cos(zr(2)); zr(1)*sin(zr(2))];
+        qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
         
         [zf, idf, zn]= data_associate(q, P, z, RE, GATE_REJECT, GATE_AUGMENT);
         % zf = feature measurements with data association getReject < 4
@@ -163,16 +157,17 @@ while not(simComplete(k, numSteps))
     QDT(:,k) = q(1:3);
     QTrueDT(:,k) = qTrue;
     QRDT(:, k) = qr;
+    QRTrueDT(:, k) = qrTrue;
     
     % Plot the remote
     plot(qrTrue(1), qrTrue(2), 'b^', 'DisplayName', 'Actual remote position');
-    plot(qrTrue(1), qrTrue(2), 'r^', 'DisplayName', 'Estimated remote position');
+    plot(qr(1), qr(2), 'r^', 'DisplayName', 'Estimated remote position');
     % Plot the trajectory
     plot(QDT(1,1:k), QDT(2,1:k),'r--', 'DisplayName', 'Estimated robot trajectory');
     plot(QTrueDT(1,1:k), QTrueDT(2,1:k),'b-', 'DisplayName', 'Actual robot trajectory');
     % Plot the true and estimated robot positions
-    arrow(qTrue, 3, 'b'); % True position
-    arrow(q, 3, 'r'); % Estimated position
+    arrow(qTrue, 2, 'b'); % True position
+    arrow(q, 2, 'r'); % Estimated position
     
     % Plot the estimated landmark positions
     plot(q(4:2:end), q(5:2:end), 'r.', 'MarkerSize', 16, 'DisplayName', 'Estimated landmark positions');
@@ -295,13 +290,12 @@ function [z, zr] = compute_range_bearing(q, lm, qr)
     %% Compute exact observation for remote
     dx = qr(1) - q(1);
     dy = qr(2) - q(2);
-    theta = q(3);
     zr = [sqrt(dx.^2 + dy.^2);
           atan2(dy,dx) - theta];
 end
 
 function z = add_observation_noise(z, R, addnoise)
-    % Add random measurement noise. We assume R is diagonal.    
+    % Add random measurement noise. We assume R is diagonal.
     if addnoise == 1
         len = size(z,2);
         if len > 0
@@ -608,10 +602,6 @@ function [q, P] = predict(q, P, v, w, Q, T)
     x = q(1);
     y = q(2);
     theta = q(3);
-    
-    % f1 = x + T*v*cos(theta)
-    % f2 = y + T*v*sin(theta)
-    % f3 = theta + T*omega
 
     s = sin(theta);
     c = cos(theta);
@@ -622,16 +612,10 @@ function [q, P] = predict(q, P, v, w, Q, T)
     Fk = [1 0 -vts;
           0 1  vtc;
           0 0 1];
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %            Check on this Lk calculation           %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    Lk = [T*c -vts*w;
-          T*s  vtc*w;
-          0 T];
+    
+    Lk = [T*c 0;
+          T*s 0;
+          0   T];
 
     % Predict covariance
     P(1:3,1:3) = Fk*P(1:3,1:3)*Fk' + Lk*Q*Lk';

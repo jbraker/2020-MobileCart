@@ -222,10 +222,17 @@ Today I met with Dr. Miah to discuss the project. We plan to have a mobile robot
 
 I set up a GitHub repository to contain the project materials using the senior project repo as a template. I then invited Dr. Miah as a collaborator in the repo.
 
-%-------------------------------------------
-
 \experiment{Matlab Simulation}
 I started copying code from the EKF-SLAM example and modifying it to have a moving remote instead of fixed waypoints.
+
+%-------------------------------------------
+
+\labday{Tuesday, November 24, 2020}
+\experiment{Matlab Simulation}
+
+Today I worked some more on the Matlab simulation. I changed the code to use a differential drive robot instead of a car-like robot. I got the simulation running, but the position of the remote was not being estimated correctly.
+
+After some debugging, I discovered that the coordinates of the remote were in the robot's local frame, but were used as if they were in the global frame. I updated the coordinate calculation to find global coordinates, and the robot was able to estimate the position of the remote.
 
 \end{addmargin}
 
