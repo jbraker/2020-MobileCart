@@ -217,23 +217,23 @@
 
 \labday{Monday, November 23, 2020}
 \experiment{Initial Setup}
-
+%
 Today I met with Dr. Miah to discuss the project. We plan to have a mobile robot, a moving remote, and some fixed RF sensors. The idea is to use the EKF-SLAM algorithm to determine the location of the fixed RF sensors as well as the location of the remote. The robot should then use machine learning techniques to determine the linear and angular velocities needed to follow the remote.
-
+%
 I set up a GitHub repository to contain the project materials using the senior project repo as a template. I then invited Dr. Miah as a collaborator in the repo.
-
+%
 \experiment{Matlab Simulation}
 I started copying code from the EKF-SLAM example and modifying it to have a moving remote instead of fixed waypoints.
-
+%
 %-------------------------------------------
 
 \labday{Tuesday, November 24, 2020}
 \experiment{Matlab Simulation}
-
+%
 Today I worked some more on the Matlab simulation. I changed the code to use a differential drive robot instead of a car-like robot. I got the simulation running, but the position of the remote was not being estimated correctly.
-
+%
 After some debugging, I discovered that the coordinates of the remote were in the robot's local frame, but were used as if they were in the global frame. I updated the coordinate calculation to find global coordinates, and the robot was able to estimate the position of the remote.
-
+%
 I noticed that the true position of the robot was being used to compute the control inputs $v$ and $\omega$. Since the robot does not know its true position, I decided that it should be using the estimated position instead. When I did that, the robot got quite far off on its estimate of the position, but the actual robot still generally followed the remote. I thought maybe getting observations more frequently would help the estimate be more accurate. Since the time between observations was set at 8 seconds for a single sensor with a reflector, I decided to change it to 2 seconds since using four reflectors and sensors would require only 1/4 of the rotation needed to get the full measurement. When I used 2 seconds, the robot was able to accurately estimate its position and follow the remote.
 
 \experiment{CoppeliaSim Simulation}
