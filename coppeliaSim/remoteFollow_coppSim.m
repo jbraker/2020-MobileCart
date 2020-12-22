@@ -77,12 +77,12 @@ P = diag((qTrue - q).^2);
 ftag = 1:size(lm, 2); % Identifier for each landmark
 da_table = zeros(1, size(lm, 2)); % Data association table
 L = 0.21668; % [m], distance between wheels
-radius = 0.0492125; % [m], Radius of wheels
+radius = 0.049199; % [m], Radius of wheels
 
 % Control parameters
 MAXV = 1; % [m/s], Maximum linear velocity (-MAXV < v < MAXV)
 KV = 1;
-MAXW = 20*pi/180; % [rad], Maximum angular velocity (-MAXW < w < MAXW)
+MAXW = 45*pi/180; % [rad], Maximum angular velocity (-MAXW < w < MAXW)
 KW = 2; % Proportional gain for angular velocity
 
 % Process (control) noise
@@ -92,7 +92,7 @@ Q = [sigmaV^2 0; 0 sigmaW^2]; % Process noise covariance matrix
 
 % Observation parameters
 MAX_RANGE = 30.0; % [m], Maximum sensing distance
-DT_OBSERVE = 8*T; % [s], Time interval between observations
+DT_OBSERVE = 4*T; % [s], Time interval between observations
 dtsum = 0; % [s], Change in time since last observation (Set to DT_OBSERVE to force observation on first iteration
 
 % Observation noises
@@ -129,17 +129,20 @@ df = 1; % [m], Following distance
 % Add noise to the remote observation
 zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
 % Convert remote observation to Cartesian coordinates
-qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
+qr_local = [zr(1)*cos(zr(2)); zr(1)*sin(zr(2))];
+qr_global = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
 % Calculate the target point (1 m closer than the remote)
-qt = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
-% Set the position of the remote estimate in CoppeliaSim
-sim.simxSetObjectPosition(clientID, remote_id(2), -1, [qr; remHeight], sim.simx_opmode_oneshot);
+qt_local = [(zr(1) - df)*cos(zr(2)); (zr(1) - df)*sin(zr(2))];
+qt_global = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
+% % Set the position of the remote estimate and target point in CoppeliaSim
+% sim.simxSetObjectPosition(clientID, remote_id(2), -1, [qr_global; remHeight], sim.simx_opmode_oneshot);
+% sim.simxSetObjectPosition(clientID, target_id, -1, [qt_global; 0.001], sim.simx_opmode_oneshot);
 
 % Initialize vectors for recording values at each timestamp
 QDT(:,1) = q(1:3); % Estimated robot pose
 QTrueDT(:,1) = qTrue; % Actual robot pose
 Pcov(:,:,1) = P_init; % Covariance
-QRDT(:,1) = qr; % Estimated remote position
+QRDT(:,1) = qr_global; % Estimated remote position
 QRTrueDT(:,1) = qrTrue; % Actual remote position
 
 % Create figure
@@ -163,14 +166,22 @@ while k < 2*numSteps % 2 times around
     
     % Update remote position
     qrTrue = remTraj(:, mod(k-1, numSteps)+1);
-    sim.simxSetObjectPosition(clientID, remote_id(1), -1, [qrTrue; remHeight], sim.simx_opmode_oneshot);
+    sim.simxSetObjectPosition(clientID, remote_id, -1, [qrTrue; remHeight], sim.simx_opmode_oneshot);
     
     % Advance timestep
     k = k + 1;
     
     %% Control inputs
     % Compute control inputs based on true pose
-    [v, w] = compute_control(qTrue, qt, KV, KW, MAXV, MAXW);
+    [v, w] = compute_control(qTrue, qt_global, KV, KW, MAXV, MAXW);
+    v = 0.7;
+    w = 30*pi/180;
+    %%%%%%%%%%%%% Applying the actuation %%%%%%%%%%%%%%%%%%
+    % Compute left and right wheel speed
+    wR = (v + w*L/2)/radius; % [rad/s] right wheel angular speed
+    wL = (v - w*L/2)/radius; % [rad/s] right wheel angular speed
+    
+    applyActuation(sim, clientID, robot_id, [wR; wL]);
     qTrue = getStates(sim, clientID, robot_id);
     
     % Add process noise
@@ -190,12 +201,15 @@ while k < 2*numSteps % 2 times around
         % Add noise to the remote observation
         zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
         % Convert remote observation to Cartesian coordinates
-        qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
-        % Calculate the target point (1 m closer than the remote)
-        qt = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
+        qr_local = [zr(1)*cos(zr(2)); zr(1)*sin(zr(2))];
+        qr_global = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
+        % Calculate the target point (df m closer than the remote)
+        qt_local = [(zr(1) - df)*cos(zr(2)); (zr(1) - df)*sin(zr(2))];
+        qt_global = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
         
-        % Set the position of the remote estimate in CoppeliaSim
-        sim.simxSetObjectPosition(clientID, remote_id(2), -1, [qr; remHeight], sim.simx_opmode_oneshot);
+%         % Set the position of the remote estimate in CoppeliaSim
+%         sim.simxSetObjectPosition(clientID, remote_id(2), -1, [qr_global; remHeight], sim.simx_opmode_oneshot);
+%         sim.simxSetObjectPosition(clientID, target_id, -1, [qt_global; 0.001], sim.simx_opmode_oneshot);
         
         [zf, idf, zn]= data_associate(q, P, z, RE, GATE_REJECT, GATE_AUGMENT);
         % zf = feature measurements with data association getReject < 4
@@ -209,13 +223,13 @@ while k < 2*numSteps % 2 times around
     % Save current information
     QDT(:,k) = q(1:3);
     QTrueDT(:,k) = qTrue;
-    QRDT(:, k) = qr;
+    QRDT(:, k) = qr_global;
     QRTrueDT(:, k) = qrTrue;
     
     % Plot the remote
     plot(remTraj(1, :), remTraj(2, :), '--', 'Color', 0.85*[1 1 1], 'DisplayName', 'Remote trajectory');
     plot(qrTrue(1), qrTrue(2), 'b^', 'DisplayName', 'Actual remote position');
-    plot(qr(1), qr(2), 'r^', 'DisplayName', 'Estimated remote position');
+    plot(qr_global(1), qr_global(2), 'r^', 'DisplayName', 'Estimated remote position');
     % Plot the trajectory
     plot(QDT(1,1:k), QDT(2,1:k),'r--', 'DisplayName', 'Estimated robot trajectory');
     plot(QTrueDT(1,1:k), QTrueDT(2,1:k),'b-', 'DisplayName', 'Actual robot trajectory');
@@ -241,20 +255,22 @@ while k < 2*numSteps % 2 times around
     F = getframe(fig);
     writeVideo(vid,F);
     
-    %%%%%%%%%%%%% Applying the actuation %%%%%%%%%%%%%%%%%%
-    % Compute left and right wheel speed
-    wR = (v + w*L/2)/radius; % [rad/s] right wheel angular speed
-    wL = (v - w*L/2)/radius; % [rad/s] right wheel angular speed
     
-    applyActuation(sim, clientID, robot_id, [wR; wL]);
     
     pause(T); % move the robot for T second  
 end
 
-
 %%%% Final send command to stop the robot in CoppeliaSim 
 applyActuation(sim, clientID, robot_id, [0; 0]);
 
+% Plot the errors
+figure;
+subplot(3,1,1);
+plot(0:T:(T*(k-1)), (QTrueDT(1, :) - QDT(1, :)));
+subplot(3,1,2);
+plot(0:T:(T*(k-1)), (QTrueDT(2, :) - QDT(2, :)));
+subplot(3,1,3);
+plot(0:T:(T*(k-1)), (QTrueDT(3, :) - QDT(3, :)));
 
 % stop the simulation:
 % sim.simxStopSimulation(clientID,sim.simx_opmode_blocking);
@@ -376,12 +392,12 @@ function [robot_id, remote_id] = getHandles(sim, clientID)
         fprintf('Get remote handle failed\n');
     end
     
-    % Get remote estimate handle
-    [rtn, remote_id(2)] = sim.simxGetObjectHandle(clientID, 'RemoteEstimate', sim.simx_opmode_oneshot_wait);
-    if (rtn~=sim.simx_return_ok)
-        fprintf('Get remote estimate handle failed\n');
-    end
-    
+%     % Get remote estimate handle
+%     [rtn, remote_id(2)] = sim.simxGetObjectHandle(clientID, 'RemoteEstimate', sim.simx_opmode_oneshot_wait);
+%     if (rtn~=sim.simx_return_ok)
+%         fprintf('Get remote estimate handle failed\n');
+%     end
+%     
 %     % Get target handle
 %     [rtn, target_id] = sim.simxGetObjectHandle(clientID, 'TargetPoint', sim.simx_opmode_oneshot_wait);
 %     if (rtn~=sim.simx_return_ok)

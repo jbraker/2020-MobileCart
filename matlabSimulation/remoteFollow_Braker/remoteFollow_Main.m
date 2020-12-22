@@ -198,6 +198,15 @@ end
 
 % Close the video file
 close(vid);
+
+% Plot the errors
+figure;
+subplot(3,1,1);
+plot(0:T:(T*(k-1)), (QTrueDT(1, :) - QDT(1, :)));
+subplot(3,1,2);
+plot(0:T:(T*(k-1)), (QTrueDT(2, :) - QDT(2, :)));
+subplot(3,1,3);
+plot(0:T:(T*(k-1)), (QTrueDT(3, :) - QDT(3, :)));
 end
 
 function done = simComplete(iter, maxIter)
@@ -556,8 +565,8 @@ end
 
 function [v, w] = compute_control(q, qt, KV, KW, maxV, maxW)
     % INPUTS:
-    %   q - True position of robot
-    %   qt - True position of target point
+    %   q - Position of robot
+    %   qt - Position of target point
     %   KV - Proportional gain for v
     %   KW - Proportional gain for w
     %   maxV - Max linear velocity [m/s]
