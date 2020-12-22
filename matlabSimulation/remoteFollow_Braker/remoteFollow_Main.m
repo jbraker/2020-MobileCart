@@ -52,7 +52,7 @@ Q = [sigmaV^2 0; 0 sigmaW^2]; % Process noise covariance matrix
 
 % Observation parameters
 MAX_RANGE = 30.0; % [m], Maximum sensing distance
-DT_OBSERVE = 2*T; % [s], Time interval between observations
+DT_OBSERVE = 8*T; % [s], Time interval between observations
 dtsum = 0; % [s], Change in time since last observation (Set to DT_OBSERVE to force observation on first iteration
 
 % Observation noises
@@ -106,7 +106,7 @@ fig = figure;
 % Create video writer
 vid = VideoWriter('OUT/trajectory.mp4', 'MPEG-4');
 vid.Quality = 100;
-vid.FrameRate = 10; 
+vid.FrameRate = 1/T; 
 open(vid);
 
 %% Main Loop
@@ -126,14 +126,7 @@ while not(simComplete(k, 2*numSteps))
     k = k + 1;
     
     %% Control inputs
-    % Compute control inputs based on true pose
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %                       Should this use q or qTrue?                      %
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Compute control inputs based on estimated pose
     [v, w] = compute_control(q, qt, KV, KW, MAXV, MAXW);
     qTrue = vehicle_model(qTrue, v, w, T);
     

@@ -10,7 +10,7 @@ computerIP = '127.0.0.1';
 % Make sure to add simRemoteApi.start(19999) in CoppeliaSim
 % import remoteApi/helper functions in the libCoppeliaSim/ directory, for instance 
 addpath('libCoppeliaSim/'); 
-addpath('../matlabSimulation/remoteFollow_Braker');
+% addpath('../matlabSimulation/remoteFollow_Braker');
 
 %%%%%%%%% Start CoppeliaSim connection  %%%%%%%%%%%%%%%
 [sim, clientID, error] = startConnection(computerIP);
@@ -43,20 +43,17 @@ pause(0.5);
 %% Setup
 T = 0.25; % [s], Sampling time interval between control signals
 
-% Waypoints for the remote to follow
-wp = [2.5, -2.5, -2.5,  2.5, 2.5;
-      2.5,  2.5, -2.5, -2.5, 2.5];
 % Remote trajectory
 vr = 1; % [m/s] Remote velocity
 dStep = 5/floor(5/(vr*T)); % Distance of each step
-x1 = 2.5:-dStep:-2.5;
-y1 = 2.5*ones(1, length(x1));
-x2 = -2.5*ones(1, length(x1));
-y2 = 2.5:-dStep:-2.5;
-x3 = fliplr(x1);
-y3 = -y1;
-x4 = -x2;
-y4 = fliplr(y2);
+y1 = -2.5:dStep:2.5;
+x1 = 2.5*ones(1, length(y1));
+y2 = 2.5*ones(1, length(x1));
+x2 = 2.5:-dStep:-2.5;
+y3 = fliplr(y1);
+x3 = -x1;
+y4 = -y2;
+x4 = fliplr(x2);
 remTraj = [x1 x2 x3 x4; y1 y2 y3 y4];
 % Initial actual position of remote
 qrTrue = remTraj(:, 1);
@@ -95,7 +92,7 @@ Q = [sigmaV^2 0; 0 sigmaW^2]; % Process noise covariance matrix
 
 % Observation parameters
 MAX_RANGE = 30.0; % [m], Maximum sensing distance
-DT_OBSERVE = 2*T; % [s], Time interval between observations
+DT_OBSERVE = 8*T; % [s], Time interval between observations
 dtsum = 0; % [s], Change in time since last observation (Set to DT_OBSERVE to force observation on first iteration
 
 % Observation noises
@@ -135,6 +132,8 @@ zr = add_observation_noise(zr, R, SWITCH_SENSOR_NOISE);
 qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
 % Calculate the target point (1 m closer than the remote)
 qt = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
+% Set the position of the remote estimate in CoppeliaSim
+sim.simxSetObjectPosition(clientID, remote_id(2), -1, [qr; remHeight], sim.simx_opmode_oneshot);
 
 % Initialize vectors for recording values at each timestamp
 QDT(:,1) = q(1:3); % Estimated robot pose
@@ -147,9 +146,9 @@ QRTrueDT(:,1) = qrTrue; % Actual remote position
 fig = figure;
 
 % Create video writer
-vid = VideoWriter('OUT/trajectory.avi');
+vid = VideoWriter('OUT/trajectory.mp4', 'MPEG-4');
 vid.Quality = 100;
-vid.FrameRate = 10; 
+vid.FrameRate = 1/T; 
 open(vid);
 
 done = false;
@@ -164,7 +163,7 @@ while k < 2*numSteps % 2 times around
     
     % Update remote position
     qrTrue = remTraj(:, mod(k-1, numSteps)+1);
-    sim.simxSetObjectPosition(clientID, remote_id, -1, [qrTrue; remHeight], sim.simx_opmode_oneshot);
+    sim.simxSetObjectPosition(clientID, remote_id(1), -1, [qrTrue; remHeight], sim.simx_opmode_oneshot);
     
     % Advance timestep
     k = k + 1;
@@ -194,6 +193,9 @@ while k < 2*numSteps % 2 times around
         qr = [zr(1)*cos(zr(2) + q(3)) + q(1); zr(1)*sin(zr(2) + q(3)) + q(2)];
         % Calculate the target point (1 m closer than the remote)
         qt = [(zr(1) - df)*cos(zr(2) + q(3)) + q(1); (zr(1) - df)*sin(zr(2) + q(3)) + q(2)];
+        
+        % Set the position of the remote estimate in CoppeliaSim
+        sim.simxSetObjectPosition(clientID, remote_id(2), -1, [qr; remHeight], sim.simx_opmode_oneshot);
         
         [zf, idf, zn]= data_associate(q, P, z, RE, GATE_REJECT, GATE_AUGMENT);
         % zf = feature measurements with data association getReject < 4
@@ -369,9 +371,15 @@ function [robot_id, remote_id] = getHandles(sim, clientID)
 %     end
     
     % Get remote handle
-    [rtn, remote_id] = sim.simxGetObjectHandle(clientID, 'Remote', sim.simx_opmode_oneshot_wait);
+    [rtn, remote_id(1)] = sim.simxGetObjectHandle(clientID, 'Remote', sim.simx_opmode_oneshot_wait);
     if (rtn~=sim.simx_return_ok)
         fprintf('Get remote handle failed\n');
+    end
+    
+    % Get remote estimate handle
+    [rtn, remote_id(2)] = sim.simxGetObjectHandle(clientID, 'RemoteEstimate', sim.simx_opmode_oneshot_wait);
+    if (rtn~=sim.simx_return_ok)
+        fprintf('Get remote estimate handle failed\n');
     end
     
 %     % Get target handle
