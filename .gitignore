@@ -90,3 +90,5 @@ Icon*
 TempTest/
 venv/
 
+# Reinclude RemAPI Files #
+!remoteApi.dll

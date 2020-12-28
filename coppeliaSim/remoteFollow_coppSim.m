@@ -148,8 +148,19 @@ QRTrueDT(:,1) = qrTrue; % Actual remote position
 % Create figure
 fig = figure;
 
+% Garentee Output Directory(Folder) exsists
+output_dir_name = 'OUT';
+files_path = matlab.desktop.editor.getActiveFilename;
+[main_dir_path,~,~] = fileparts(files_path);
+dir_path = strcat(main_dir_path,'/',output_dir_name);
+if ~exist(dir_path,'dir')
+    mkdir(dir_path);
+end
+
 % Create video writer
-vid = VideoWriter('OUT/trajectory.mp4', 'MPEG-4');
+video_name = 'trajectory';
+video_path = strcat(dir_path,'/',video_name,'.mp4');
+vid = VideoWriter(video_path, 'MPEG-4');
 vid.Quality = 100;
 vid.FrameRate = 1/T; 
 open(vid);
