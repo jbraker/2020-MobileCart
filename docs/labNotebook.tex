@@ -217,11 +217,12 @@
 
 \labday{Monday, November 23, 2020}
 \experiment{Initial Setup}
-%
+
 Today I met with Dr. Miah to discuss the project. We plan to have a mobile robot, a moving remote, and some fixed RF sensors. The idea is to use the EKF-SLAM algorithm to determine the location of the fixed RF sensors as well as the location of the remote. The robot should then use machine learning techniques to determine the linear and angular velocities needed to follow the remote.
-%
+
+\vspace{12pt}
 I set up a GitHub repository to contain the project materials using the senior project repo as a template. I then invited Dr. Miah as a collaborator in the repo.
-%
+
 \experiment{Matlab Simulation}
 I started copying code from the EKF-SLAM example and modifying it to have a moving remote instead of fixed waypoints.
 %
@@ -229,11 +230,13 @@ I started copying code from the EKF-SLAM example and modifying it to have a movi
 
 \labday{Tuesday, November 24, 2020}
 \experiment{Matlab Simulation}
-%
+
 Today I worked some more on the Matlab simulation. I changed the code to use a differential drive robot instead of a car-like robot. I got the simulation running, but the position of the remote was not being estimated correctly.
-%
+
+\vspace{12pt}
 After some debugging, I discovered that the coordinates of the remote were in the robot's local frame, but were used as if they were in the global frame. I updated the coordinate calculation to find global coordinates, and the robot was able to estimate the position of the remote.
-%
+
+\vspace{12pt}
 I noticed that the true position of the robot was being used to compute the control inputs $v$ and $\omega$. Since the robot does not know its true position, I decided that it should be using the estimated position instead. When I did that, the robot got quite far off on its estimate of the position, but the actual robot still generally followed the remote. I thought maybe getting observations more frequently would help the estimate be more accurate. Since the time between observations was set at 8 seconds for a single sensor with a reflector, I decided to change it to 2 seconds since using four reflectors and sensors would require only 1/4 of the rotation needed to get the full measurement. When I used 2 seconds, the robot was able to accurately estimate its position and follow the remote.
 
 \experiment{CoppeliaSim Simulation}
@@ -260,13 +263,12 @@ Today I worked some more on the CoppeliaSim simulation. I tried to figure out wh
 %
 Today I worked on the design of the parabolic reflector array that will be used on top of the robot. I drew a 3d model of a paraboloidal reflector with brackets to hold the XBee modules in place, and a press-fit joint to the stepper motor. I 3d printed some small test models to verify that the XBee mounting mechanism worked properly and the press-fit joint fit well on the stepper motor. I will try to print the reflector array overnight as it will take a while to complete.
 
-I also worked on a reflector array that is paraboloidal on the bottom and parabolic on the top. This design is not finished yet. I plan to finish it tomorrow.
-
-The finished paraboloidal reflector design is shown in \autoref{fig:paraboloidalReflector}. Also, close-ups of the XBee mounting mechanism and the stepper motor joint are shown in Figures \ref{fig:XBeeMountingBracket} and \ref{fig:stepperMotorPressFitJoint}, respectively.
+\vspace{12pt}
+I also worked on a reflector array that is paraboloidal on the bottom and parabolic on the top. This design is not finished yet. I plan to finish it tomorrow. The finished paraboloidal reflector design is shown in \autoref{fig:paraboloidalReflector}. Also, close-ups of the XBee mounting mechanism and the stepper motor joint are shown in Figures \ref{fig:XBeeMountingBracket} and \ref{fig:stepperMotorPressFitJoint}, respectively.
 
 \begin{figure}[h!]
     \center
-    \includegraphics[width=5in]{figs/img/paraboloidalReflector.png}
+    \includegraphics[width=4in]{figs/img/paraboloidalReflector.png}
     \caption{Finished Paraboloidal Reflector}
     \label{fig:paraboloidalReflector}
 \end{figure}
@@ -283,6 +285,41 @@ The finished paraboloidal reflector design is shown in \autoref{fig:paraboloidal
     \includegraphics[width=3in]{figs/img/stepperMotorPressFitJoint.png}
     \caption{Stepper Motor Joint}
     \label{fig:stepperMotorPressFitJoint}
+\end{figure}
+
+%-------------------------------------------
+
+\labday{Tuesday, December 29, 2020}
+\experiment{Reflector Design}
+%
+Today I worked on the parabolic/paraboloidal reflector design. The finished design is shown in \autoref{fig:parabolicParaboloidalReflector}. This design uses the same XBee mounting mechanism and stepper motor joint as the purely paraboloidal design.
+
+\begin{figure}[h!]
+    \center
+    \includegraphics[width=4in]{figs/img/parabolicParaboloidalReflector.png}
+    \caption{Finished Parabolic/Paraboloidal Reflector}
+    \label{fig:parabolicParaboloidalReflector}
+\end{figure}
+
+After finishing the parabolic/paraboloidal design, I worked on a bracket to mount the stepper motor to the BudgetBot chassis. Although there are some screw holes in the BudgetBot chassis, they were not in convenient locations, and I did not want to drill new ones at this time. Therefore, I decided to use the screws that hold the top and bottom plates together in the back. The finished stepper motor bracket is shown in \autoref{fig:stepperMotorBracket}
+
+\begin{figure}[h!]
+    \center
+    \includegraphics[width=4in]{figs/img/stepperMotorBracket.png}
+    \caption{Finished Stepper Motor Bracket}
+    \label{fig:stepperMotorBracket}
+\end{figure}
+
+While waiting for the paraboloidal reflector array to finish printing, I tried to get the XBee modules up and running. I installed XCTU from the Digi website. I put one of the XBee modules into the USB adapter and plugged it into the computer. I was able to add it into XCTU, but when I clicked on it to try to configure it, I got a firmware error. First, I tried downloading the new firmware package to the computer, but that did not solve the problem. Then I tried the legacy firmware package. It would download for a while, but I kept getting an error at some point in the process that would stop it, so I would have to restart the process. My internet connection is not very good, so I might be able to accomplish this when I have a better connection.
+
+\vspace{12pt}
+When the paraboloidal reflector array finished printing, I cleaned all of the support material off of it and prepared it for use. I lined the inside of the reflectors with foil tape to make them reflective. Then I installed the XBee modules. I did not connect any wires to the XBees, though. An image of the assembled robot is shown in \autoref{fig:assembledRobot}.
+
+\begin{figure}[h!]
+    \center
+    \includegraphics[width=5in]{figs/img/robotImages/assembledRobot.jpg}
+    \caption{Assembled Robot}
+    \label{fig:assembledRobot}
 \end{figure}
 
 \end{addmargin}
