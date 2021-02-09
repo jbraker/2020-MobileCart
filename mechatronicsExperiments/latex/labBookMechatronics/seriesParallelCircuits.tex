@@ -1,0 +1,464 @@
+\section{Objectives}
+By the end of this lab work, students are expected to learn how to 
+
+\begin{itemize}
+\item verify Kirchhoff's laws for DC circuits and
+\item work with voltage divider circuits.
+\end{itemize}
+
+\section{Parts}
+\label{sec:partsEx3}
+
+\begin{itemize}
+\item Breadboard    
+\item One $330~[\ohm]$ resistor
+\item Two $1~[\kilo\ohm]$ resistors
+\item One $1.5~[\kilo\ohm]$ resistor 
+\item Two $2.2~[\kilo\ohm]$ resistors
+\item One $3.3~[\kilo\ohm]$ resistor
+\item One $4.7~[\kilo\ohm]$ resistor
+\item One $6.8~[\kilo\ohm]$ resistor
+\item One $1~[\kilo\ohm]$ potentiometer (POT)
+
+% Part~\ref{sec:seriesCircuit} Resistors: $R_1 = 1~\kilo\ohm$, $R_2 = 1.5~\kilo\ohm$, $R_3 = 2.2~\kilo\ohm$, $R_4 = 330~\ohm$
+% \item Part~\ref{sec:voltageDivider} Resistors: $R_1 = 1~\kilo\ohm$, $R_2 = 2.2~\kilo\ohm$
+% \item Part~\ref{sec:parallelCircuit} Resistors: $R_1 = 3.3~\kilo\ohm$, $R_2 = 4.7~\kilo\ohm$, $R_3 = 6.8~\kilo\ohm$
+% \item Digital Multimeter (DMM) and Agilent Power Supply
+\end{itemize}  
+
+
+
+\section{Background}
+\label{sec:background}
+In this laboratory experiment, you are to construct simple series and parallel circuits, and verify the basic circuit laws (Kirchhoff's voltage and current laws) associated with them. These laws are repeated here for convenience. %
+%
+\begin{mdframed}[frametitle=Kirchhoff's Laws,roundcorner=10pt,backgroundcolor=yellow!5]
+Kirchhoff's voltage law (KVL):~For  a closed mathematical path (loop) around an electrical circuit, the algebraic sum of all voltages is equal to zero.   
+
+\noindent
+Kirchhoff's current law (KCL): For a node (junction) of an electrical circuit, the algebraic sum of all currents entering (or leaving) the node  is equal to zero. 
+\end{mdframed}
+%
+In addition, you will learn how to construct a voltage divider circuit and use it to provide a fraction of the applied voltage using a potentiometer.  
+
+\noindent 
+\textbf{Notations:} For convenience, let $V_i$ and $I_i$ denote the voltage drop across and the current flowing through the resistor $R_i,$ for $i=1,2,\ldots,$ respectively. Most of the circuit diagrams of this  laboratory workbook use the conventions below %
+%
+   \begin{center}
+     \begin{circuitikz}[american]
+       \draw
+       (0,0) to[R,l=$R_i$,v>=$V_i$,i=$I_i$,o-o](5*\smgrid,0);
+     \end{circuitikz}     
+   \end{center}
+   %
+   to denote  the voltage drop, $V_i,$ across and the current, $I_i,$ through the resistor $R_i.$
+   
+\subsection{Series Circuits}
+\label{sec:seriesCircuit}
+
+Consider the circuit shown in Figure~\ref{fig:kvlVerify}. Note that the current flowing through the resistors connected in series is the same. The voltage drops across the resistors connected in series are different depending on the value of each resistor and we shall assume an ideal ammeter, \textit{i.e.,} the voltage drop across the ammeter is zero. Applying KVL to the circuit shown in Figure~\ref{fig:kvlVerify} yields %
+%
+\begin{align}
+    -V_s + V_1 + V_2 + V_3 + V_4 = 0, 
+    \label{eq:KVL}
+\end{align}
+%
+where $V_s$ is the applied voltage to the circuit and $V_i$ is the voltage across resistor $R_i,$ for $i=1,2,\ldots, 4.$ The total current flowing through the circuit is given by %
+%
+\begin{align}
+    I_s = \frac{V_s}{R_{\text{eq}}},
+\end{align}
+%
+where $R_{\text{eq}} = R_1 + R_2 + R_3 + R_4$ is the equivalent series resistance of the circuit. %
+%
+\begin{figure}[ht]
+  \centering
+  \begin{circuitikz}[american]
+    \draw
+    (0,0) to[V<=$V_s$, invert, i=$I_s$,-*,fill=green!50](0,8*\smgrid) to[ammeter,v>=,fill=yellow!50] (4*\smgrid,8*\smgrid) to[R,v>=$V_1$,l^=$R_1$,-*](12*\smgrid,8*\smgrid) to[R,v>=$V_2$,l^=$R_2$,-*](12*\smgrid,4*\smgrid) to[R,v>=$V_3$,l^=$R_3$,-*](12*\smgrid,0) to[R,v>=$V_4$,l^=$R_4$,-*](0,0) node[ground]{};
+  \end{circuitikz}
+    % \includegraphics[scale=1.5]{figs/ipe/lab3/kvlVerify.eps}
+    \caption{DC series circuit for verifying Kirchhoff's voltage law.}
+    \label{fig:kvlVerify}
+\end{figure}
+
+
+\subsection{Voltage Divider}
+\label{sec:voltageDivider}
+
+In a circuit consisting of electrical elements connected in series, a fraction of the applied voltage appears across each circuit element (resistor, for instance). This circuit is called voltage divider. Figure~\ref{fig:voltDivider} shows a voltage divider circuit where the applied voltage $V_s$ is divided across the resistors $R_1$ and $R_x.$ Since the resistor $R_1$ and the variable resistor $R_x$ are connected in series, the current, $I_s,$ flowing through these resistors is the same. The resistor $R_x$ is represented by a potentiometer which provides the variable resistance for conducting experiments. The voltage, $V_x,$ from the center terminal of the potentiometer to the circuit ground is given by %
+%
+\begin{align}
+  V_x =\left(\frac{R_x}{R_T}\right)V_s,
+  \label{eq:Vx}
+\end{align}
+%
+where $R_x$ is the variable resistance controlled by the shaft of the potentiometer and $R_T = R_1+R_x.$ 
+
+\begin{figure}[ht]
+  \centering
+  \begin{circuitikz}[american]
+    \draw
+    % (0,0) to[V,l^=$V_s{=}10~{[}\volt{]}$,v<=](0,8*\smgrid) to[R,v>=$V_1$,l^=$R_1{=}1~{[}\kilo\ohm{]}$](4*\smgrid,8*\smgrid) to[variable american resistor,l^=$R_x{=}1~{[}\kilo\ohm{]}$,-*] (4*\smgrid,4*\smgrid) to[R,v>=$V_2$,l^=$R_2{=}2.2~{[}\kilo\ohm{]}$](4*\smgrid,0) to[short,-*] (0,0)node[ground]{};
+    (0,0) to[V<=$V_s$,invert,i=$I_s$,fill=green!50](0,6*\smgrid) to[R,v>=$V_1$,l^=$R_1$](6*\smgrid,6*\smgrid) to[variable american resistor,l^=$R_x$,v>=$V_x$] (6*\smgrid,0) to[short,-*] (0,0)node[ground]{};    
+    % \draw[dashed,->,ultra thick]
+    % (10*\smgrid,0) to[short,l_=$V_x$](10*\smgrid,3*\smgrid); 
+  \end{circuitikz}
+%    \includegraphics[scale=1.75]{figs/ipe/lab3/voltDivider.eps}
+    \caption{Voltage divider circuit.}
+    \label{fig:voltDivider}
+\end{figure}
+
+\subsection{Parallel Circuit and Kirchhoff's Current Law (KCL) Verification}
+\label{sec:parallelCircuit}
+
+Consider the circuit shown in Figure~\ref{fig:parallelKCL}, where $V_s$ is the supply voltage and the three resistors $R_1,$ $R_2,$ and $R_3,$ are connected in parallel. Therefore, the voltage across the resistors connected in parallel is the same, \textit{i.e.,} $V_s=V_1=V_2=V_3,$ assuming the fact that the voltage drop across the ammeter is zero.  Currents flowing through the resistors connected in parallel differ depending on the values of the resistances. Applying KCL in the circuit shown in Figure~\ref{fig:parallelKCL} yields %
+%
+\begin{align}
+    I_s = I_1 + I_2 + I_3, 
+    \label{eq:KCL-ParallelCkt}
+\end{align}
+%
+where $I_s$ is the total supply current entering the node connecting the positive terminals of the parallel resistors of  the circuit and $I_i$ is the current flowing through resistor $R_i,$ for $i=1,2,\ldots, 3.$ Note the current flowing through resistor $R_i$ is simply given by  %
+%
+\begin{align}
+  I_i = \frac{V_i}{R_i}=\frac{V_s}{R_i}.
+  \label{eq:Ii-OhmsLaw}
+\end{align}
+%
+Alternatively, the current flowing through resistor $R_i,$ for $i=1,2,3,$ can also be found by applying the current divider rule %
+%
+\begin{align}
+  I_i = \left(\frac{R_T}{R_i}\right)I_s,
+  \label{eq:Ii-CurrentDivision}
+\end{align}
+%
+where $R_T = R_1\|R_2\|R_3$ is the equivalent resistance of the resistors connected in parallel. 
+
+\begin{figure}
+  \centering
+  \begin{circuitikz}[american]
+    \draw
+    (0,0) to[V<=$V_s$,invert,i=$I_s$,fill=green!50](0,6*\smgrid) to[ammeter,v>=~,-*,fill=yellow!50] (6*\smgrid,6*\smgrid) to[R,v>=$V_1$,l^=$R_1$,i=$I_1$](6*\smgrid,0);
+    \draw
+    (6*\smgrid,6*\smgrid) -- (10*\smgrid,6*\smgrid) to[R,v>=$V_2$,l^=$R_2$,i=$I_2$](10*\smgrid,0);
+    \draw
+    (10*\smgrid,6*\smgrid) -- (14*\smgrid,6*\smgrid) to[R,v>=$V_3$,l^=$R_3$,i=$I_3$](14*\smgrid,0) to[short,-*](0,0)node[ground]{};
+  \end{circuitikz}
+    \caption{ Parallel circuit for verifying KCL.}
+    \label{fig:parallelKCL}
+\end{figure}
+
+\section{Prelab}
+\label{sec:prelab}
+
+The prelab is composed of three parts. You are to apply the theoretical background illustrated in the previous sections to find the numerical values of currents and voltages in a resistive circuit.  
+
+\begin{prelab}[Series circuit]{prelab:seriesCircuit}
+  Given the circuit shown in Figure~\ref{fig:kvlVerify} with $V_s=12~[\volt],$ $R_1=1~[\kilo\ohm],$ $R_2=1.5~[\kilo\ohm],$ $R_3=2.2~[\kilo\ohm],$ and $R_4=330~[\ohm].$    
+     \begin{enumerate}
+         \item Find the equivalent resistance $R_{\mathrm{eq}}$ and the series current $I_s.$
+         \item Determine the voltages $V_1,$ $V_2,$ and $V_3$ and $V_4.$
+           
+         \item Verify KVL is satisfied.  
+         \end{enumerate}
+ 
+\end{prelab}
+
+\begin{prelab}[Voltage divider]{prelab:voltageDivider}
+  Given the circuit shown in Figure~\ref{fig:voltDivider} with $V_s=10~[\volt]$ and $R_1=1~[\kilo\ohm].$ Assume that  $R_x$ is a potentiometer. %
+  
+     \begin{enumerate}
+         \item Find the voltage, $V_x,$ across the resistor $R_x,$ when $R_x=0,0.2,0.4,~\ldots,0.9,1.0~[\kilo\ohm]$ using voltage division Equation~\eqref{eq:Vx}.
+         \item Use MATLAB to plot $V_x$ versus $R_x.$
+         \end{enumerate}
+ 
+\end{prelab}
+
+
+\begin{prelab}[Parallel circuit]{prelab:parallelCircuit}
+  Given the circuit shown in Figure~\ref{fig:parallelKCL} with $V_s=12~[\volt],$ $R_1=3.3~[\kilo\ohm],$ $R_2=4.7~[\kilo\ohm],$ and $R_3=6.8~[\kilo\ohm].$ 
+     \begin{enumerate}
+     \item Find the equivalent resistance $R_T$ of the resistors connected in parallel.
+      
+         \item Find the currents $I_1,I_2,$ and  $I_3$ using Ohm's law~\eqref{eq:Ii-OhmsLaw}.       
+         \item Find the currents $I_1,I_2,$ and  $I_3$ using current division Equation~\eqref{eq:Ii-CurrentDivision}.
+         \item Determine the current $I_s.$           
+         \item Verify KCL is satisfied.  
+         \end{enumerate}
+ 
+       \end{prelab}
+       
+% \begin{prelab}[Maximum power transfer theorem]{prelab:maximumPowerTransferTheorem}
+%     Given the circuit shown in Figure~\ref{fig:task2-Figure2}: 
+%      \begin{enumerate}
+%      \item Write the expression of the power $P$ as a function of $V_s, R_s,$ and $R_L.$
+       
+%      \item What is the relation between $R_L$ and $R_s$ when the power delivered to the load resistor $R_L$ is maximum. Show your work in detail.
+       
+%          \item Use MATLAB to plot the power $P$ (Y-axis) versus the load resistance $R_L$ (X-axis), for $V_s=12~[\volt],$ $R_s=1~[\kilo\ohm],$ and $R_L=0,0.1,0.2,\ldots,5~[\kilo\ohm].$
+           
+%          \item Use the plot to determine the resistance $R_L$ when the power delivered to the load resistor is maximum. 
+%          \end{enumerate}
+ 
+%        \end{prelab}
+       
+\section{Laboratory Work}
+
+\subsection{Part~1}
+\label{sec:part1}
+
+\begin{enumerate}
+\item Measure the values of the resistors $R_1=1~[\kilo\ohm],$ $R_2=1.5~[\kilo\ohm],$ $R_3=2.2~[\kilo\ohm],$ and $R_4=330~[\ohm],$  and then complete the following table. 
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Resistor &  Ideal (color-coded) & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+      $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+      $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 = 
+      $R_4$ & $\ldots$ & $\ldots$\\   %|| R_4 = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+
+  These resistors are used to construct the circuit shown in Figure~\ref{fig:kvlVerify}.
+  
+\item Construct the circuit shown in Figure~\ref{fig:kvlVerify} with $V_s=12~[\volt]$ and resistors listed in the previous step, and then  complete the following table:
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|}
+    \toprule
+    Component & Ideal (calculated) & Measured\\
+    \toprule
+    $I_s$ & & \\                    %|| I_s = 2.98mA
+    $V_1$ & & \\          %|| VAB = 
+    $V_2$ & & \\          %|| VBC = 
+    $V_3$ & & \\          %|| VCD = 
+    $V_4$ & & \\          %|| VDE = 
+    \bottomrule
+  \end{tabular}      
+  \end{center}
+
+
+\item Use Equation~\eqref{eq:KVL} to verify the Kirchhoff's voltage law based on the data obtained in the previous step. 
+
+ 
+
+  
+\end{enumerate}
+
+\subsection{Part~2}
+\label{sec:part2}
+\begin{enumerate}
+\item Measure the values of the resistors $R_1=1~[\kilo\ohm]$ and $R_x=1.0~[\kilo\ohm]$ that used to construct the circuit shown in Figure~\ref{fig:voltDivider}, and then complete the following table.
+
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Resistor &  Ideal (color-coded) & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+      % $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+      $R_x,$ POT (outer terminals) & $\ldots$ & $\ldots$\\   %|| POT =     
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+
+\item Construct the circuit shown in Figure~\ref{fig:voltDivider} with a supply voltage  of $V_s = 10~[\volt],$ a resistance of $R_1=1~[\kilo\ohm],$ and  a potentiometer of $1~[\kilo\ohm]$ outer terminal resistance.  
+
+  
+\item Using the voltage divider rule, compute the voltage $V_x$ based on the measured variable resistance as shown in the following table. Also, measure the voltage $V_x$ and record in the table below. 
+
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|}
+    \toprule
+    % Variable resistance $(R_x)$ & $V_x=V_s\left[\frac{R_x+R_2}{R_T}\right]$ (computed) & $V_x$ (measured) \\
+    Variable resistance $(R_x)$ & $V_x=V_s\left[\frac{R_x}{R_T}\right]$ (computed) & $V_x$ (measured) \\    
+    \toprule    
+    $100~[\ohm]$ &&\\
+    $200~[\ohm]$ &&\\
+    $300~[\ohm]$ &&\\
+    $400~[\ohm]$ &&\\
+    $500~[\ohm]$ &&\\
+    $600~[\ohm]$ &&\\
+    $700~[\ohm]$ &&\\
+    $800~[\ohm]$ &&\\
+    $900~[\ohm]$ &&\\    
+    $1~[\kilo\ohm]$ &&\\
+    \bottomrule
+  \end{tabular}    
+  \end{center}
+
+
+  
+\item Adjust the potentiometer so that the voltage divider circuit provides the desired voltage of $V_x\approx 4.3~[\volt].$ Draw the desired voltage divider circuit. 
+
+% \missingfigure{Draw the desired voltage divider circuit here!}
+
+\item Let $V_{x,\text{min}}$ and $V_{x,\text{max}}$ denote the minimum and maximum values of the output voltage $V_x,$ respectively, then complete the following table.
+
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \toprule
+    $V_{x,\text{min}}$ (computed) & $V_{x,\text{min}}$ (measured)  & $V_{x,\text{max}}$ (computed) & $V_{x,\text{max}}$ (measured)\\
+    \hline
+    &&&\\
+    \bottomrule
+  \end{tabular}    
+  \end{center}
+
+  
+\end{enumerate}
+
+\subsection{Part~3}
+\label{sec:part3}
+
+\begin{enumerate}
+\item Measure the values of the resistors $R_1=3.3~[\kilo\ohm],$ $R_2=4.7~[\kilo\ohm],$ and $R_3=6.8~[\kilo\ohm]$ used to construct the circuit shown in Figure~\ref{fig:parallelKCL}, and then complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Resistor &  Ideal (color-coded) & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+      $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+      $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+
+\item Connect resistors $R_1,$ $R_2,$ and $R_3$ in three different configurations as follows.%  
+  %
+  \begin{center}
+  \begin{circuitikz}[american]
+    \draw 
+    (0,0) to[R=$R_1$,*-*] ++(5*\smgrid,0);
+    \draw
+    (8*\smgrid,0) to[short,*-]++(\smgrid,\smgrid) to[R=$R_1$] ++(5*\smgrid,0) to[short,-*]++(\smgrid,-\smgrid);
+    \draw
+    (8*\smgrid,0) to[short,*-]++(\smgrid,-\smgrid) to[R=$R_2$] ++(5*\smgrid,0) to[short,-*]++(\smgrid,\smgrid);
+
+    \draw
+    (18*\smgrid,0) to[short,*-]++(\smgrid,2*\smgrid) to[R=$R_1$] ++(5*\smgrid,0) to[short,-*]++(\smgrid,-2*\smgrid);
+    \draw
+    (18*\smgrid,0) to[R=$R_2$] ++(7*\smgrid,0);    
+    \draw
+    (18*\smgrid,0) to[short,*-]++(\smgrid,-2*\smgrid) to[R=$R_3$] ++(5*\smgrid,0) to[short,-*]++(\smgrid,2*\smgrid);            
+  \end{circuitikz}    
+  \end{center}
+  %
+
+  After that, complete the table below. %
+  %
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \toprule
+    Total quantity & $R_1$ & $R_1\big\| R_2$ & $R_1\big\|R_2\big\|R_3$\\
+    \toprule    
+     $R_T$ (measured) & & & \\
+    \bottomrule
+   \end{tabular}    
+  \end{center}  
+  %
+
+  \begin{figure}
+    \centering
+    \subfigure[][]{
+      \label{fig:parallelKCL1a}
+    \begin{circuitikz}[american]
+      \draw
+      (0,0) to[V<=$V_s$,invert,i_=$I_s$,fill=green!50]++(0,6*\smgrid) to[ammeter,v>=,-*,fill=yellow!50]++(5*\smgrid,0) to[R=$R_1$,v>=$V_1$,i=$I_1$] ++(0,-6*\smgrid) to[short,-*]++(-5*\smgrid,0)node[ground]{};
+    \end{circuitikz}
+  }
+  \subfigure[][]{
+    \label{fig:parallelKCL1b}
+    \begin{circuitikz}
+      \draw
+      (0,0) to[V<=$V_s$,invert,i_=$I_s$,fill=green!50]++(0,6*\smgrid) to[ammeter,v>=,-*,fill=yellow!50]++(5*\smgrid,0) to[R=$R_1$,v>=$V_1$,i=$I_1$] ++(0,-6*\smgrid) to[short,-*] ++(-5*\smgrid,0)node[ground]{};
+      \draw
+      (5*\smgrid,6*\smgrid) to[short] ++(4*\smgrid,0) to[R=$R_2$,v>=$V_2$,i=$I_2$] ++(0,-6*\smgrid)to[short]++(-4*\smgrid,0);
+    \end{circuitikz}
+  }
+  \subfigure[][]{
+    \label{fig:parallelKCL1c}
+    \begin{circuitikz}
+      \draw
+      (0,0) to[V<=$V_s$,invert,i_=$I_s$,fill=green!50]++(0,6*\smgrid) to[ammeter,v>=,-*,fill=yellow!50]++(5*\smgrid,0) to[R=$R_1$,v>=$V_1$,i=$I_1$] ++(0,-6*\smgrid) to[short,-*] ++(-5*\smgrid,0)node[ground]{};
+      \draw
+      (5*\smgrid,6*\smgrid) to[short] ++(4*\smgrid,0) to[R=$R_2$,v>=$V_2$,i=$I_2$] ++(0,-6*\smgrid)to[short]++(-4*\smgrid,0);
+      \draw
+      (9*\smgrid,6*\smgrid) to[short] ++(4*\smgrid,0) to[R=$R_3$,v>=$V_3$,i=$I_3$] ++(0,-6*\smgrid)to[short]++(-4*\smgrid,0);      
+    \end{circuitikz}
+    }
+  
+    \caption{Circuits with resistance~\subref{fig:parallelKCL1a} $R_1$~\subref{fig:parallelKCL1b} $R_1$ and $R_2$ connected in parallel (\textit{i.e.,}~$R_1\big\|R_2$),~and~\subref{fig:parallelKCL1c} $R_1,$ $R_2,$ and $R_3$ connected in parallel (\textit{i.e.,}~$R_1\big\|R_2\big\|R_3$).}
+    \label{fig:parallelKCL1}
+  \end{figure}
+
+  \item Construct the circuits shown in Figures~\ref{fig:parallelKCL1a},~\ref{fig:parallelKCL1b},~and~\ref{fig:parallelKCL1c}, where resistors are connected as $R_1,$ $R_1\big\|R_2,$ and $R_1\big\|R_2\big\|R_3,$ respectively. The supply voltage $V_s=12~[\volt].$ Measure the total current $I_s$ of circuits shown in Figures~\ref{fig:parallelKCL1a},~\ref{fig:parallelKCL1b},~and~\ref{fig:parallelKCL1c}. Record all your measurements in the following table.
+%
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|}
+    \toprule
+    Total quantity & $R_1$ & $R_1\big\| R_2$ & $R_1\big\|R_2\big\|R_3$\\
+    \toprule    
+     $I_s$ (measured) & & & \\     
+    \bottomrule
+   \end{tabular}    
+  \end{center}
+
+   
+ \item Construct the circuit shown in Figure~\ref{fig:parallelKCL1c}, and then calculate the current (using Ohm's law) flowing through each resistor of the circuit and record the calculated values of current in the following table. %
+
+   \begin{center}
+     \begin{tabular}{c|c|c|c}
+       \toprule
+       & $I_1=\frac{V_s}{R_1}$ & $I_2=\frac{V_s}{R_2}$ & $I_3=\frac{V_s}{R_3}$\\
+       \toprule    
+       $I$ (computed) & & & \\
+       \hline
+       $I$ (measured) & & & \\    
+       \bottomrule
+     \end{tabular}        
+   \end{center}
+
+  
+
+
+ \item For the circuit constructed in the previous step, calculate the current (using the general current divider rule) flowing through each resistor of the circuit and record the calculated values of current in the following table.
+
+   \begin{center}
+     \begin{tabular}{c|c|c|c}
+       \toprule
+       & $I_1=\left(\frac{R_T}{R_1}\right)I_s$ & $I_2=\left(\frac{R_T}{R_2}\right)I_s$ & $I_3=\left(\frac{R_T}{R_3}\right)I_s$\\
+       \toprule    
+       $I$ (computed) & & & \\
+       \hline
+       $I$ (measured) & & & \\    
+       \bottomrule
+     \end{tabular}        
+   \end{center}
+
+
+
+
+  
+\item Using the data recorded in the previous two steps, verify KCL given by Equation~\eqref{eq:KCL-ParallelCkt} is satisfied. 
+\end{enumerate}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../labBookMechatronics-V2"
+%%% End:

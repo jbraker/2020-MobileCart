@@ -1,0 +1,235 @@
+\documentclass{article}
+\def\name{Suruz Miah}
+\def\coursetitle{Electrical Engineering Fundamentals Laboratory}
+\def\dept{Electrical and Computer Engineering Department}
+\def\college{Caterpillar College of Engineering and Technology}
+\def\uname{Bradley University}
+
+
+
+
+
+\def\labTitle{Experiment 14: Introduction to Embedded Computer}
+
+
+
+%%% set paper margins
+\oddsidemargin=-0.2in % -.3 for a4 paper
+\evensidemargin=.5in
+\textwidth=7.0in
+\topmargin=-.4in
+\textheight=9.0in
+\parindent=.2in
+\newcommand{\vsmallskip}[0]{}
+\newcommand{\midskip}[0]{\vspace{3mm}}
+
+% Customize page headers
+\usepackage{fancyhdr,lastpage}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,          % color of internal links
+    citecolor=red,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=blue           % color of external links
+}
+\usepackage{amsmath,amssymb,bm,mathrsfs}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage[table,usenames,dvipsnames]{xcolor}
+\usepackage{setspace}
+%\doublespacing
+\onehalfspacing
+\usepackage{array} % related to table
+\usepackage{float}
+\usepackage{verbatim}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\epstopdfsetup{suffix={}}
+\usepackage{siunitx}
+\sisetup{unitsep = \cdot}
+\usepackage{tikz}
+\usepackage[siunitx]{circuitikz}
+\def\myCktGrid{0.5}
+
+
+
+\usepackage{todonotes}
+\usepackage{enumerate}
+
+\newtheorem{example}{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{definition}{Definition}
+
+\usepackage{tikz} % tikz's drawing pad's gridsize = 1cm
+\usetikzlibrary{circuits.logic.US,circuits.logic.IEC}
+
+
+% \usepackage[framemethod=tikz]{mdframed}
+% \mdfsetup{%
+% backgroundcolor=red!10,
+% roundcorner=0pt}
+
+%%%% Design your own mdframe box
+\usepackage[framemethod=TikZ]{mdframed}
+\newcounter{prelab}\setcounter{prelab}{0}
+\renewcommand{\theprelab}{~\#\arabic{prelab}}
+\newenvironment{prelab}[2][]{%
+    \refstepcounter{prelab}
+ 
+    % Code for box design goes here.
+\ifstrempty{#1}%
+% if condition (without title)
+{\mdfsetup{%
+    frametitle={%
+        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+        \node[anchor=east,rectangle,fill=blue!20]
+        {\strut Prelab~\theprelab};}
+    }%
+% else condition (with title)
+}{\mdfsetup{%
+    frametitle={%
+        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+        \node[anchor=east,rectangle,fill=blue!20]
+        {\strut Prelab~\theprelab:~#1};}%
+    }%
+}%
+% Both conditions
+\mdfsetup{%
+    innertopmargin=10pt,linecolor=blue!20,%
+    linewidth=0.1pt,topline=true,%
+    frametitleaboveskip=\dimexpr-\ht\strutbox\relax%
+}
+ 
+\begin{mdframed}[backgroundcolor=yellow!5, roundcorner=10pt,outerlinecolor= blue!70!black,outerlinewidth=1.2]\relax}{%
+\end{mdframed}}
+
+
+
+
+%\pagestyle{fancy}
+
+%\rfoot{\date{\today}}
+\lhead{S.~Miah}
+% \chead{\coursecode:~\coursetitle}
+\rhead{\uname}
+
+\renewcommand{\headrulewidth}{1.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\cfoot{%\hspace{\footpageshift}%
+       \parbox{4in}{\, \hfill Page~ %
+                    \arabic{page} of \protect\pageref*{LastPage} % +LP
+%                    \arabic{page}                               % -LP
+                    \hfill \,}}
+\lfoot{ECE Department}   % header at lower left corner
+% \rfoot{\labNumber}   % header at lower right corner
+
+%\renewcommand{\thefootnote}{$\star$} 
+
+\begin{document}
+
+\centerline{\href{http://www.bradley.edu}{\includegraphics[height=0.5in]{figs/logoBU1-Print}}}
+
+\begin{center}
+\vspace*{1.0cm}
+{\bf \LARGE %
+  Mechatronics Laboratory Experiments}
+
+% \vspace*{1.0cm}
+
+% {\Large
+% \semester
+% }
+
+\vspace*{2.0cm}
+
+{\color{BrickRed}
+\hrule height 1.5pt
+\midskip
+}
+%\hrulefill\\
+{\LARGE %\labNumber: 
+\labTitle%~\footnote{This lab task is adapted from reference~\cite{Buchla2010}}%
+}\\
+\midskip
+{\color{BrickRed}
+\hrule height 1.5pt
+\midskip
+}
+%\hrulefill\\
+\vspace*{0.15cm}
+\begin{flushright}
+{\Large
+Dr.~\href{http://personalpages.bradley.edu/~smiah}{Suruz \textsc{Miah}}
+%Dr.~\href{http://personalpages.bradley.edu/~smiah}{Suruz \textsc{Miah}} and  \href{mailto:aferrebee@mail.bradley.edu}{Alex Ferrebee}
+}
+\end{flushright}
+
+\vspace*{1.0cm}
+\noindent
+~\hfill\boxed{\textbf{Total: 100 points}}
+
+
+\end{center}
+
+\vspace*{1.0cm}
+\section*{\textit{Notes}}
+\begin{itemize}
+\item Individual group work only. 
+  % \item Only electronic submissions through Sakai will be accepted.
+  
+\item See the ``Deliverables'' section of this document for submission guideline. 
+
+\item Pay attention to the due date. %$10$ points penalty will be applied for each day of delay. 
+\item All students should be be aware of the regulations of the Bradley University's Breach of Academic Integrity at \url{http://www.bradley.edu/academic/undergradcat/20142015/overview-archeating.dot}
+\end{itemize}
+
+
+\begin{center}
+\vspace*{2.0cm}
+\dept\\
+\college\\
+\href{http://www.bradley.edu/}{\uname}
+\end{center}
+\thispagestyle{empty}
+\newpage
+
+
+%\date{ }
+%\maketitle
+%
+%\thispagestyle{fancy} % shows header and footer on all the  pages (including first page)
+%\thispagestyle{empty}
+\pagestyle{fancy}
+%\renewcommand{\contentsname}{ }
+% % if you want to include table of contents
+% 1. Replace ``section*{'' by ``section{'' in ``research-uottawa.tex'' and ``teaching-uottawa.tex''
+% 2. Activate the following two lines
+ \renewcommand{\contentsname}{Table of Contents}
+ \tableofcontents %Inhaltsverzeichnis
+ 
+
+ %%%%%
+ \input{latex/labBookMechatronics/BBBlueIntroC.tex}
+ 
+
+\bibliographystyle{plain}
+\bibliography{bib/refsBooksTRTheses}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

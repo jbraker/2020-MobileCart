@@ -1,0 +1,453 @@
+\section{Objectives}
+By the end of this lab work, students are expected to learn how to 
+
+\begin{itemize}
+\item measure capacitive (inductive) reactances of a series RC (RL) circuit.
+  
+\item draw impedence and voltage phasor diagrams 
+  
+\item explain the effect of frequency on impedence and voltage phasors in series RC and RL circuits. 
+  
+
+\end{itemize}
+
+\section{Parts}
+\label{sec:partsEx6}
+
+\begin{enumerate}
+\item Breadboard    
+\item One $6.8~[\kilo\ohm]$ resistor,
+\item One $10.0~[\kilo\ohm]$ resistor,
+  
+\item One $0.01~[\micro\farad]$ capacitor, and
+\item One $50~[\milli\henry]$ inductor.
+  
+\end{enumerate}
+
+\section{Background}
+\label{sec:background}
+
+In this lab, we shall consider first-order circuits that contain an independent ac voltage source, a resistive element, and an energy storage element (a capacitor or an inductor). In particular, we will build circuits that implement  first-order passive lowpass filters. Lowpass filters tend to pass low frequency input signal  components to the output and reject high frequency input signal components.  Here, we shall focus on building a first-order passive lowpass filter using:
+\begin{enumerate}
+\item an RC circuit and
+  
+\item an RL circuit. 
+\end{enumerate}
+
+% This laboratory task consists of two parts. In the first part, you are to verify Ohm's law of simple DC circuit and determine resistance of the circuit from a given current vs. voltage graph. In the second part, you are to determine power across a veriable resistor and verify the maximum power transfer theorem.
+
+
+\subsection{Series RC Circuit}
+\label{sec:rcCircuit}
+A first-order passive lowpass filter can be built using a series RC circuit that consists of an AC voltage source connected in series with a resistor (R) and a capacitor (C).  Figure~\ref{fig:figure1-RC-Circuit} shows an RC circuit that implements a  first-order passive lowpass filter, where $v_i(t)$ and $v_o(t)$ denote the input and output voltages (time-varying) of the filter, respectively.  %
+% %
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.5\textwidth]{figs/ipe/lab6/figure1-RC-circuit}
+% \caption{A series RC circuit (lowpass filter circuit).}
+% \label{fig:figure1-RC-Circuit}
+% \end{figure}
+% %
+%
+\begin{figure}
+\centering
+\begin{circuitikz}[scale=1.2,american voltages]
+  \draw
+  (0,0) to[sV,l^=$v_i(t)$,fill=green!50] (0,4*\smgrid) to[R,v_>=$v_R(t)$, l^=$R$] (4*\smgrid,4*\smgrid);
+  % draw capacitor
+  \draw 
+  (4*\smgrid,0) to[pC, v_<=$v_C(t)$,l=$C$] (4*\smgrid,4*\smgrid);
+  % draw ground
+  \draw (0,0) to[short,-*](4*\smgrid,0) node[ground]{};
+  %  Output
+  \draw
+  (4*\smgrid,4*\smgrid) to[short,-o](8*\smgrid,4*\smgrid);
+  \draw 
+  (4*\smgrid,0) to[short,-o](8*\smgrid,0);
+
+  \draw % output voltage
+  (8*\smgrid,0) to[open,v<=$v_o(t)$] (8*\smgrid,4*\smgrid); 
+\end{circuitikz}
+\caption{A series RC circuit (lowpass filter circuit).}
+\label{fig:figure1-RC-Circuit}
+\end{figure}
+%
+Let $v_R(t)$ and $v_C(t)$ denote the voltages across the resistor $R$ and the capacitor $C,$ respectively. Clearly, $v_o(t) = v_C(t),$ \textit{i.e.,} the filter output $v_o(t)$ is taken across the  capacitor. The impedance phasor (complex impedance) of the circuit is given in rectangular form as: %
+\begin{align*}
+  \mathbf{Z}_{\text{RC}} = R -jX_{\text{C}}~~\text{and its polar form is:}\qquad {\bf Z}_{\text{RC}} = |\mathbf{Z}_{\text{RC}}|\angle\left[\mathrm{tan}^{-1}\left(\frac{-X_{\text{C}}}{R}\right)\right],                 
+\end{align*}
+%
+where $|\mathbf{Z}_{\text{RC}}| = \sqrt{R^2 + X_{\text{C}}^2}$ is the magnitude of the impedance phasor ${\bf Z}_{\text{RC}}$ and $X_{\text{C}}=\frac{1}{\omega C}$  is the capacitive reactance, with $\omega$ being the angular frequency of the input signal $v_i(t)$  Note that the capacitive reactance decreases as the input signal frequency increases. A generic impedance phasor diagram is shown in Figure~\ref{fig:figure2-a-RC-circuitImpedancePhasor}. Furthermore, let $\mathbf{V}_R$ and $\mathbf{V}_C$ denote the phasor voltages across the resistor and the capacitor, respectively. Figure~\ref{fig:figure2-b-RC-circuitVoltagePhasor} shows the circuit's generic voltage phasor diagram.  
+%
+% %
+% \begin{figure}
+%     \centering
+%     \subfigure[][]{
+%     \label{fig:figure2-a-RC-circuitImpedancePhasor}
+%     \includegraphics[width=0.47\textwidth]{figs/ipe/lab6/figure2-a-RC-circuitImpedancePhasor}}
+%     \subfigure[][]{
+%     \label{fig:figure2-b-RC-circuitVoltagePhasor}
+%         \includegraphics[width=0.47\textwidth]{figs/ipe/lab6/figure2-b-RC-circuitVoltagePhasor}}
+%     \caption{Phasor diagrams of an RC circuit~\subref{fig:figure2-a-RC-circuitImpedancePhasor} impedance phasor~and~\subref{fig:figure2-b-RC-circuitVoltagePhasor} voltage phasor.}
+%     \label{fig:figure1-RC-CircuitPhasor}
+% \end{figure}
+% %
+%
+\begin{figure}
+    \centering
+    \subfigure[][]{
+      \label{fig:figure2-a-RC-circuitImpedancePhasor}
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf Z}_{\text{RC}}]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf Z}_{\text{RC}}]$};
+        % draw phasor R
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,0) node[anchor=south west]{$R$};   
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (0, -3*\smgrid) node[anchor=north east]{$X_{\text{C}}$};
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,-3*\smgrid) node[anchor=north west]{${\bf Z}_{\text{RC}}$};                   
+      \end{tikzpicture}
+    % \includegraphics[width=0.47\textwidth]{figs/ipe/lab6/figure2-a-RC-circuitImpedancePhasor}
+  }
+    \subfigure[][]{
+      \label{fig:figure2-b-RC-circuitVoltagePhasor}
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf V}_i]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf V}_i]$};
+        % draw phasor v_R
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,0) node[anchor=south west]{${\bf V}_R$};   
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (0, -3*\smgrid) node[anchor=north east]{${\bf V}_C$};
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,-3*\smgrid) node[anchor=north west]{${\bf V}_i$};                   
+      \end{tikzpicture}      
+    % \includegraphics[width=0.47\textwidth]{figs/ipe/lab6/figure2-b-RC-circuitVoltagePhasor}
+  }
+    \caption{Phasor diagrams of an RC circuit~\subref{fig:figure2-a-RC-circuitImpedancePhasor} impedance phasor~and~\subref{fig:figure2-b-RC-circuitVoltagePhasor} voltage phasor.}
+    \label{fig:figure1-RC-CircuitPhasor}
+\end{figure}
+%
+
+Suppose that the circuit shown in Figure~\ref{fig:figure1-RC-Circuit} has a time-varying input voltage given by $v_i(t) = V_i\sin(\omega t),$ where $V_i$ represents its amplitude (peak voltage~[\si{\volt}]), $\omega$ is the angular frequency in [\si{\radian\per\second}], and $v_i(t)$ represents the voltage at time $t\ge 0.$ Note that the angular frequency $\omega = 2\pi f,$ where $f$ is the frequency of the signal in [\si{\hertz}]. The phasor of the input voltage $v_i(t) = V_i\sin(\omega t)$ is given by ${\bf V}_i = V_i\angle{-90^{\degree}}.$ Therefore, the phasor votlages across the resistor and the capacitor are: %
+%
+\begin{align*}
+  {\bf V}_R = \left(\frac{R\angle{0^{\degree}}}{{\bf Z}_{\text{RC}}}\right){\bf V}_i\qquad\text{and}\qquad {\bf V}_C = \left(\frac{X_{\text{C}}\angle{-90^{\degree}}}{{\bf Z}_{\text{RC}}}\right) {\bf V}_i,\qquad\mathrm{respectively}.
+\end{align*}
+%
+
+
+
+
+
+
+\subsection{Series RL Circuit}
+\label{sec:voltageDivider}
+
+A series RL circuit consists of an AC voltage  source in series with a resistor ($R$) and an inductor ($L$). Figure~\ref{fig:figure3-RL-Circuit} shows an RL circuit that implements a  first-order passive lowpass filter, where the output voltage of the filter, $v_o(t),$ is taken across the resistor.  %
+%
+\begin{figure}
+  \centering
+  \begin{circuitikz}[scale=1.2,american voltages]
+    \draw  % source and inductor
+    (0,0) to[sV,l^=$v_i(t)$,fill=green!50] (0,4*\smgrid) to[L,v_>=$v_L(t)$, l^=$L$] (4*\smgrid,4*\smgrid);
+    % draw resistor
+    \draw 
+    (4*\smgrid,0) to[R, v_<=$v_R(t)$,l=$R$] (4*\smgrid,4*\smgrid);
+    % draw ground
+    \draw (0,0) to[short,-*](4*\smgrid,0) node[ground]{};
+    % Output
+    \draw
+    (4*\smgrid,4*\smgrid) to[short,-o](8*\smgrid,4*\smgrid);
+    \draw 
+    (4*\smgrid,0) to[short,-o](8*\smgrid,0);
+
+    \draw % output voltage
+    (8*\smgrid,0) to[open,v<=$v_o(t)$] (8*\smgrid,4*\smgrid); 
+  \end{circuitikz}  
+% \includegraphics[width=0.5\textwidth]{figs/ipe/lab6/figure3-RL-circuit}
+\caption{A series RL circuit (lowpass filter circuit).}
+\label{fig:figure3-RL-Circuit}
+\end{figure}
+%
+The time-varying voltage induced across the inductor is denoted with $v_L(t),$ for time $t\ge 0.$ Similar to the first-order RC circuit, the impedance phasor of the first-order RL circuit  is given as: %
+\begin{align*}
+  {\bf Z}_{\text{RL}} = R +jX_{\text{L}}~~\text{and its polar form is:}\qquad {\bf Z}_{\text{RL}} = |{\bf Z}_{\text{RL}}|\angle\left[\mathrm{tan}^{-1}\left(\frac{X_{\text{L}}}{R}\right)\right],                 
+\end{align*}
+%
+where $|{\bf Z}_{\text{RL}}| = \sqrt{R^2 + X_{\text{L}}^2}$ is the magnitude of the impedance phasor ${\bf Z}_{\text{RL}},$ $X_{\text{L}}=\omega L$  is the inductive reactance. Note that the inductive reactance increases as the input signal frequency, $\omega,$ increases. The generic phasor diagrams of the impedance and the voltages of the RL circuit are shown in Figure~\ref{fig:figure4-a-RL-circuitImpedancePhasor}~and~\ref{fig:figure4-b-RL-circuitVoltagePhasor}, respectively. %
+%
+\begin{figure}
+    \centering
+    \subfigure[][]{
+      \label{fig:figure4-a-RL-circuitImpedancePhasor}
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf Z}_{\text{RL}}]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf Z}_{\text{RL}}]$};
+        % draw phasor R
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,0) node[anchor=north west]{$R$};   
+        % draw phasor XL
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (0, 3*\smgrid) node[anchor=north east]{$X_{\text{L}}$};
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,3*\smgrid) node[anchor=north west]{${\bf Z}_{\text{RL}}$};                   
+      \end{tikzpicture}      
+    %\includegraphics[width=0.47\textwidth]{figs/ipe/lab6/figure4-a-RL-circuitImpedancePhasor}
+  }
+    \subfigure[][]{
+      \label{fig:figure4-b-RL-circuitVoltagePhasor}
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf V}_i]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf V}_i]$};
+        % draw phasor v_R
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,0) node[anchor=north west]{${\bf V}_R$};   
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (0, 3*\smgrid) node[anchor=north east]{${\bf V}_L$};
+        % draw phasor XC
+        \draw[ultra thick,->,-stealth,blue](0,0) -- (4*\smgrid,3*\smgrid) node[anchor=south west]{${\bf V}_i$};                   
+      \end{tikzpicture}            
+    % \includegraphics[width=0.47\textwidth]{figs/ipe/lab6/figure4-b-RL-circuitVoltagePhasor}
+  }
+    \caption{Phasor diagrams of an RL circuit~\subref{fig:figure4-a-RL-circuitImpedancePhasor} impedance phasor~and~\subref{fig:figure4-b-RL-circuitVoltagePhasor} voltage phasor.}
+    \label{fig:figure4-RL-CircuitPhasor}
+\end{figure}
+%
+
+
+Suppose that RL circuit shown in Figure~\ref{fig:figure3-RL-Circuit} has a time-varying input voltage $v_i(t) = V_i\sin(\omega t).$ The phasor votlages across the resistor and the inductor are: %
+%
+\begin{align*}
+  {\bf V}_R = \left(\frac{R\angle{0^{\degree}}}{{\bf Z}_{\text{RL}}}\right) {\bf V}_i\qquad\text{and}\qquad {\bf V}_L = \left(\frac{X_{\text{L}}\angle{90^{\degree}}}{{\bf Z}_{\text{RL}}}\right) {\bf V}_i,\qquad\mathrm{respectively}.
+\end{align*}
+%
+%
+\section{Prelab}
+\label{sec:prelab}
+%
+The prelab consists of two parts. In the first part, you are to analyze the series RC circuit shown in Figure~\ref{fig:figure1-RC-Circuit}. In addition, let $v_C(t)$ denote the time-varying voltage across the capacitor of the first-order lowpass filter shown in Figure~\ref{fig:figure1-RC-Circuit}. Given the voltage phasor across the capacitor, ${\bf V}_C,$ $v_C(t)$ can simply be determined using %
+%
+%\begin{align*}
+  $v_C(t) = \mathrm{Re}\left[{\bf V}_Ce^{j\omega t}\right].$
+%\end{align*}
+%
+In the second part, analyze the series RL circuit shown in Figure~\ref{fig:figure3-RL-Circuit}.  If $v_R(t)$ denotes the time-varying voltage across the resistor of the first-order lowpass filter shown in Figure~\ref{fig:figure3-RL-Circuit}, $v_R(t)$ can be determined using %
+%
+% \begin{align*}
+  $v_R(t) = \mathrm{Re}\left[{\bf V}_Re^{j\omega t}\right].$
+% \end{align*}
+%
+
+
+\begin{prelab}[Series RC circuit]{prelab:RC-circuit}
+%
+Given the circuit shown in Figure~\ref{fig:figure1-RC-Circuit} with $v_i(t) = 1.5\sin(1000\pi t)~[\volt],$ $R = 6.8~[\kilo\ohm],$ and $C = 0.01~[\micro\farad].$ 
+      \begin{enumerate}
+        \item Find the impedance phasor ${\bf Z}_{\text{RC}}.$
+        \item Determine the phasors ${\bf V}_i,$ ${\bf V}_R,$ and ${\bf V}_C$ corresponding to the phasors for the input voltage, resistor voltage, and capacitor voltage.
+          \item Draw the impedance and voltage phasor diagrams.
+        \item Assume that  the sampling frequency $f_s = 100f,$ where $f$ is the fundamental frequency of the input voltage $v_i(t).$ Using Matlab, plot the voltage $v_i(t)$ versus time with $t$ ranging from $0$ to $10~[\si{\milli\second}]$
+          \item Using Matlab, plot the voltage $v_C(t)$ versus time with $t$ ranging from $0$ to $10~[\si{\milli\second}],$ where $v_C(t)$ is the voltage across the capacitor as a function of time.            
+        \end{enumerate}
+\end{prelab}
+
+
+\begin{prelab}[Series RL circuit]{prelab:RL-Circuit}
+Given the circuit shown in Figure~\ref{fig:figure3-RL-Circuit} with $v_i(t) = 1.5\sin(50000\pi t)~[\volt],$ $R = 10~[\kilo\ohm],$ and $L = 50~[\milli\henry].$ 
+      \begin{enumerate}
+        \item Find the impedance phasor ${\bf Z}_{\text{RL}}.$
+        \item Determine the phasors ${\bf V}_i,$ ${\bf V}_R,$ and ${\bf V}_L$ corresponding to the phasors for the input voltage,  resistor voltage,  and inductor voltage.
+          
+        \item Draw the impedance and voltage phasor diagrams.
+          
+        \item Assume that  the sampling frequency $f_s = 100f,$ where $f$ is the fundamental frequency of the input voltage $v_i(t).$ Using Matlab, plot the voltage $v_i(t)$ versus time with $t$ ranging from $0$ to $0.5~[\si{\milli\second}]$
+          
+        \item Using Matlab, plot the voltage $v_R(t)$ versus time with $t$ ranging from $0$ to $0.5~[\si{\milli\second}],$ where $v_R(t)$ is the voltage across the resistor as a function of time.  
+        \end{enumerate}  
+\end{prelab}
+
+
+\section{Laboratory Work}
+
+\subsection{Part~1}
+\label{sec:part1}
+
+
+\begin{enumerate}
+
+ 
+\item Measure the resistance of the $6.8~[\kilo\ohm]$ resistor ($R$) and the capacitance of the $0.01~[\micro\farad]$ capacitor ($C$). Then, complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Quantity &  Ideal & Measured\\
+      \toprule
+      $R$ & $\ldots$ & $\ldots$\\   %|| R = 
+      $C$ & $\ldots$ & $\ldots$\\   %|| C = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Construct the circuit shown in Figure~\ref{fig:figure1-RC-Circuit} with $v_i(t) = 1.5\sin(1000\pi t)~[\volt]$ and  using the components measured in the previous step. 
+
+\item Let $V_{\text{R,pp}}$ and $V_{\text{C,pp}}$ denote the peak-to-peak voltage across the resistor $R$ and the capacitor $C,$ respectively. Measure $V_{\text{R,pp}}$ and $V_{\text{C,pp}}$ using the oscilloscope at your workstation. Record your measurements. 
+
+  \begin{center}
+    \begin{tabular}{c|c}
+      \toprule
+      Quantity &  Measured\\
+      \toprule
+      $V_{\text{R,pp}}$ & $\ldots$\\   %|| V_{\text{R,pp}} = 
+      $V_{\text{C,pp}}$ & $\ldots$\\   %|| V_{\text{C,pp}} = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Compute the peak-to-peak current $I_{\text{pp}}$ by applying Ohm's law (use the measured value of the resistance $R$). Note that the current through the series circuit  should be the same. \label{item:I-C}
+
+
+  
+\item Using Ohm's law, calculate the capacitive reactance $X_{\text{C}}$ using the measured value of $V_{\text{C,pp}}$ and the current calculated in the previous step.
+
+  
+\item Compute the complex impedence ${\bf Z}_{\text{RC}}$ of the circuit. [Hint: Use the input voltage $v_i$ and the current found in step~\ref{item:I-C}.
+
+\item Change the frequency of the input voltage as in the ``Frequency'' column of the following table and record all your measurements and computed values of $V_{\text{R,pp}},~V_{\text{C,pp}},~I_{\text{pp}},~X_{\text{C}},~$ and ${\bf Z}_{\text{RC}}$  in the following table. \label{item:Table-C}
+
+
+    \begin{center}
+    \begin{tabular}{|l|c|c|c|c|c|}
+      \toprule
+      Frequency & $V_{\text{R,pp}}$ & $V_{\text{C,pp}}$ & $I_{\text{pp}}$ &  $X_{\text{C}}$ & ${\bf Z}_{\text{RC}}$\\
+      \toprule
+      $500~\hertz$ & &&&&\\
+      \hline
+      $1000~\hertz$ & &&&&\\
+      \hline
+      $1500~\hertz$ & &&&&\\
+      \hline
+      $2000~\hertz$ & &&&&\\
+      \hline
+      $4000~\hertz$ & &&&&\\
+      \hline
+      $8000~\hertz$ & &&&&\\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+  
+   
+\item Draw the impedence and voltage phasors using the measured values recorded in the Table in step~\ref{item:Table-C}. 
+
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf Z}_{\text{RC}}]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf Z}_{\text{RC}}]$};
+      \end{tikzpicture}
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf V}_i]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf V}_i]$};
+      \end{tikzpicture}      
+
+%
+   
+\end{enumerate}
+
+\subsection{Part~2}
+\label{sec:part2}
+\begin{enumerate}
+\item Measure the resistance of the $10~[\kilo\ohm]$ resistor ($R$) and the inductance of the $50~[\milli\henry]$ inductor ($L$). Then, complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Quantity &  Ideal & Measured\\
+      \toprule
+      $R$ & $\ldots$ & $\ldots$\\   %|| R = 
+      $L$ & $\ldots$ & $\ldots$\\   %|| L = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Construct the circuit shown in Figure~\ref{fig:figure3-RL-Circuit} with $v_i(t) = 1.5\sin(1000\pi t)~[\volt]$ and using the components measured in the previous step. 
+
+
+\item Let $V_{\text{R,pp}}$ and $V_{\text{L,pp}}$ denote the peak-to-peak voltage across the resistor $R$ and the inductor $L,$ respectively. Measure $V_{\text{R,pp}}$ and $V_{\text{L,pp}}$ using the oscilloscope of your workstation. Record your measurements. 
+
+  \begin{center}
+    \begin{tabular}{c|c}
+      \toprule
+      Quantity &  Measured\\
+      \toprule
+      $V_{\text{R,pp}}$ & $\ldots$\\   %|| V_{\text{R,pp}} = 
+      $V_{\text{L,pp}}$ & $\ldots$\\   %|| V_{\text{L,pp}} = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+
+
+  
+\item Compute the peak-to-peak current $I_{\text{pp}}$ by applying Ohm's law (use the measured value of the resistance $R$). Note that the current through the series circuit  should be the same. \label{item:I-L}
+
+
+  
+\item Using Ohm's law, compute the inductive reactance $X_{\text{L}}$ using the measured value of $V_{\text{L,pp}}$ and the current calculated in the previous step.
+
+  
+\item Compute the complex impedence ${\bf Z}_{\text{RL}}$ of the circuit. [Hint: Use the input voltage $v_i(t)$ and the current found in step~\ref{item:I-L}.
+
+\item Record all your measurements and computed values of $V_{\text{R,pp}},~V_{\text{L,pp}},~I_{\text{pp}},~X_{\text{L}},~$ and ${\bf Z}_{\text{RL}}$  in the following table. \label{item:Table-L}
+
+
+    \begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+      \toprule
+      $V_{\text{R,pp}}$ & $V_{\text{L,pp}}$ & $I_{\text{pp}}$ &  $X_{\text{L}}$ & ${\bf Z}_{\text{RL}}$\\
+      \toprule
+      &&&&\\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+  
+   
+\item Draw the impedence and voltage phasors using the measured values recorded in the Table in step~\ref{item:Table-C}.   
+
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf Z}_{\text{RL}}]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf Z}_{\text{RL}}]$};
+      \end{tikzpicture}
+      \begin{tikzpicture}
+        \draw[step=0.2cm,gray,very thin](-5*\smgrid,-5*\smgrid) grid (10*\smgrid,5*\smgrid);
+        % draw x axis
+        \draw[thick,<->] (-5*\smgrid,0) -- (7*\smgrid,0) node[anchor = north west]{Re$[{\bf V}_i]$};
+         % draw y axis
+        \draw[thick,<->](0,-5*\smgrid) -- (0,5*\smgrid) node[anchor=north east]{Im$[{\bf V}_i]$};
+      \end{tikzpicture}      
+
+ \end{enumerate}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../labBookMechatronics-V2"
+%%% End:

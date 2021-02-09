@@ -1,0 +1,553 @@
+\section{Objectives}
+By the end of this laboratory experiment, students will learn how to 
+
+\begin{itemize}
+\item design a passive lowpass filter circuit to filter noisy input signals and 
+  
+\item analyze the frequency response of a first-order passive circuit.  
+
+\end{itemize}
+
+\section{Parts}
+\label{sec:parts}
+
+\begin{enumerate}  
+\item Breadboard,
+\item Two $1~[\kilo\ohm]$ resistors,  
+\item One $0.1~[\micro\farad]$ capacitor, and
+\item One $50~[\milli\henry]$ inductor.
+  
+\end{enumerate}
+
+\section{Background}
+\label{sec:background}
+Filtering is a technique to remove unwanted signals from a desired signal. A
+filter is a device that implements a filtering technique. Figure~\ref{fig:fig6p33}
+shows that a time-varying noisy (unwanted) signal, $v_i(t),$ is applied at the
+input of a filter. A clean signal is generated at the filter output. %
+%
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}
+            \node[inner sep=0pt](inPlot){\includegraphics[width=0.48\textwidth,height=0.2\textheight]{matlabCodeHambley2018/OUT/fig6p33-Noisy}};
+    \draw[->,ultra thick,blue]
+    ($(inPlot.south)+(-1.5cm,0)$)--($(inPlot.south)+(-1.5cm,-0.5cm)$);      
+    \end{tikzpicture}
+  \end{center}
+
+  % \begin{mdframed}[backgroundcolor=yellow!10,roundcorner=7pt,outerlinecolor=blue,outerlinewidth=1pt]
+      \begin{center}
+        \begin{circuitikz}[scale=0.8,american voltages]
+          \tikzstyle{every node} = [font=\tiny]
+          \draw
+          (3*\smgrid,0) -- (2*\smgrid,0) to[short,o-*](0,0)node[ground]{} to[sV,v<=$v_i(t)$] (0,3*\smgrid) to[short,-o](2*\smgrid,3*\smgrid) --(3*\smgrid,3*\smgrid);
+          \draw[fill=gray!20]
+          (3*\smgrid,-0.5*\smgrid) rectangle (6*\smgrid,3.5*\smgrid) node[pos=0.5]{Filter};
+          \draw
+          (6*\smgrid,3*\smgrid) to[short,-o](7.5*\smgrid,3*\smgrid);
+          \draw
+          (6*\smgrid,0) to[short,-o](7.5*\smgrid,0) to[open,v<=$v_o(t)$](7.5*\smgrid,3*\smgrid);
+        \end{circuitikz}
+      \end{center}        
+    % \end{mdframed}
+    
+  \begin{center}
+    \begin{tikzpicture}
+      \node[inner sep=0pt](outPlot){\includegraphics[width=0.48\textwidth,height=0.2\textheight]{matlabCodeHambley2018/OUT/fig6p33-Clean}};
+    \draw[->,ultra thick,blue]
+    ($(outPlot.north)+(1.5cm,+0.6cm)$) -- ($(outPlot.north) + (1.5cm,0)$);            
+    \end{tikzpicture}
+  \end{center}  
+  \caption{Filtering noisy signal.}
+  \label{fig:fig6p33}
+\end{figure}
+%
+Filters can mainly be classified as analog and digital. Analog filters are
+futher classified as passive and active. Passive filters are constructed using
+passive electrical circuit elements, such as resistors, inductors, and
+capacitors. Active filters include operational amplifiers (op-amps). Therefore,
+passive filters may be used for high frequency applications since op-amps have
+limited bandwidth. A certain range of frequency components, called
+\emph{passband}, of the input signal can be passed through a filter circuit.
+Depending on the frequency band of the input signal to be passed through the
+filter relatively unattenuated, a filter circuit can be arranged in a variety of
+ways to mainly yield lowpass, highpass, bandpass, and band-reject filters. Ideal
+characteristics of these filters are shown in Figure~\ref{fig:fig6p32}. %
+%
+  \begin{figure}
+    \centering
+    \subfigure[][]{
+      \label{fig:lowpassH}
+    \begin{tikzpicture}%[scale=0.8]
+      % \tikzstyle{every node} = [font=\tiny];
+      \draw[step=0.5*\smgrid,gray,very thin](0,0) grid (2.5*\smgrid,2.5*\smgrid);
+        \draw[thick,->](0,0) -- (0,2.5*\smgrid)node[anchor=south]{$|H(f)|$};
+        \draw[thick,->](0,0) -- (2.5*\smgrid,0)node[anchor=west]{$f$};
+        \draw[blue,very thick]
+        (0,2*\smgrid)node[anchor=east]{$1$} -- (2*\smgrid,2*\smgrid) --(2*\smgrid,0) node[anchor=north]{$f_H$};
+      \end{tikzpicture}
+    }
+    \subfigure[][]{
+      \label{fig:highpassH}
+    \begin{tikzpicture}%[scale=0.8]
+      % \tikzstyle{every node} = [font=\tiny];
+      \draw[step=0.5*\smgrid,gray,very thin](0,0) grid (2.5*\smgrid,2.5*\smgrid);
+        \draw[thick,->](0,0) -- (0,2.5*\smgrid)node[anchor=south]{$|H(f)|$};
+        \draw[thick,->](0,0) -- (2.5*\smgrid,0)node[anchor=west]{$f$};
+        \draw[blue,very thick]
+        (0,2*\smgrid)node[anchor=east]{$1$};
+        \draw[blue,very thick]
+        (0,0) -- (\smgrid,0) node[anchor=north]{$f_L$} --(\smgrid,2*\smgrid)--(2*\smgrid,2*\smgrid);        
+      \end{tikzpicture}      
+    }
+    \subfigure[][]{
+      \label{fig:bandpassH}
+    \begin{tikzpicture}%[scale=0.8]
+      % \tikzstyle{every node} = [font=\tiny];
+      \draw[step=0.5*\smgrid,gray,very thin](0,0) grid (2.5*\smgrid,2.5*\smgrid);
+        \draw[thick,->](0,0) -- (0,2.5*\smgrid)node[anchor=south]{$|H(f)|$};
+        \draw[thick,->](0,0) -- (2.5*\smgrid,0)node[anchor=west]{$f$};
+        \draw[blue,very thick]
+        (0,2*\smgrid)node[anchor=east]{$1$};
+        \draw[blue,very thick]
+        (0,0) -- (\smgrid,0) node[anchor=north]{$f_L$} |-(2*\smgrid,2*\smgrid)--(2*\smgrid,0)node[anchor=north]{$f_H$}--(2.5*\smgrid,0);        
+      \end{tikzpicture}      
+    }
+    \subfigure[][]{
+      \label{fig:notchH}
+    \begin{tikzpicture}%[scale=0.8]
+      % \tikzstyle{every node} = [font=\tiny];
+        \draw[step=0.5*\smgrid,gray,very thin](0,0) grid (2.5*\smgrid,2.5*\smgrid);
+        \draw[thick,->](0,0) -- (0,2.5*\smgrid)node[anchor=south]{$|H(f)|$};
+        \draw[thick,->](0,0) -- (2.5*\smgrid,0)node[anchor=west]{$f$};
+        \draw[blue,very thick]
+        (0,2*\smgrid)node[anchor=east]{$1$};
+        \draw[blue,very thick]
+        (0,2*\smgrid) -| (\smgrid,0) node[anchor=north]{$f_L$} --(2*\smgrid,0) node[anchor=north]{$f_H$} |-(2.5*\smgrid,2*\smgrid);        
+      \end{tikzpicture}      
+    }            
+    % \includegraphics[width=0.6\textwidth]{figs/img/Hambley2018/fig6p4}
+    \caption{Ideal filters~\subref{fig:lowpassH} lowpass,~\subref{fig:highpassH} highpass,~\subref{fig:bandpassH} bandpass, and~\subref{fig:notchH} band-reject.}
+    \label{fig:fig6p32}
+  \end{figure}
+%  
+  The frequency response is described using the transfer function $H(f)$ and the
+  cutoff frequencies are denoted with $f_H$ and  $f_L.$ The number of independent capacitors and inductors determines the order (first-order, second-order, and so on) of a filter circuit. 
+  
+  \section{First-order Lowpass Filters}
+\label{sec:first-order-lowpass}
+Consider first-order circuits that contain an independent ac voltage source, a resistive element, and an energy storage element (a capacitor or an inductor). In particular, we shall build circuits that implement  first-order passive lowpass filters. Lowpass filters tend to pass low frequency input signal  components to the output and reject high frequency input signal components. Filters are used in a wide range of applications. For example, the telephone land lines employ lowpass filters.  A first-order passive lowpass filter can be built using %
+%
+\begin{enumerate}[a)]
+\item an RC circuit and
+  
+\item an RL circuit. 
+\end{enumerate}
+%
+We shall focus on testing first-order passive lowpass filters using both RC and RL circuits. Figure~\ref{fig:figure1-RC-Circuit} shows a series RC circuit that consists of an input (AC) voltage source connected in series with a resistor (R) and a capacitor (C).  %
+%
+\begin{figure}
+  \centering
+  \subfigure[][]{
+\label{fig:figure1-RC-Circuit}    
+\begin{circuitikz}[scale=1.2,american voltages]
+  \draw
+  (0,0) to[sV,l^=$v_i(t)$,fill=green!50] (0,4*\smgrid) to[R,v_>=$v_R(t)$, l^=$R$] (4*\smgrid,4*\smgrid);
+  % draw capacitor
+  \draw 
+  (4*\smgrid,0) to[pC, v_<=$C$] (4*\smgrid,4*\smgrid);
+  % draw ground
+  \draw (0,0) to[short,-*](4*\smgrid,0) node[ground]{};
+  %  Output
+  \draw
+  (4*\smgrid,4*\smgrid) to[short,-o](8*\smgrid,4*\smgrid);
+  \draw 
+  (4*\smgrid,0) to[short,-o](8*\smgrid,0);
+
+  \draw % output voltage
+  (8*\smgrid,0) to[open,v<=$v_C(t){=}v_o(t)$] (8*\smgrid,4*\smgrid); 
+\end{circuitikz}
+}
+\subfigure[][]{
+  \label{fig:figure1-RL-Circuit}
+  \begin{circuitikz}[scale=1.2,american voltages]
+    \draw  % source and inductor
+    (0,0) to[sV,l^=$v_i(t)$,fill=green!50] (0,4*\smgrid) to[cute inductor,v_>=$v_L(t)$, l^=$L$] (4*\smgrid,4*\smgrid);
+    % draw resistor
+    \draw 
+    (4*\smgrid,0) to[R, v_<=$R$] (4*\smgrid,4*\smgrid);
+    % draw ground
+    \draw (0,0) to[short,-*](4*\smgrid,0) node[ground]{};
+    % Output
+    \draw
+    (4*\smgrid,4*\smgrid) to[short,-o](8*\smgrid,4*\smgrid);
+    \draw 
+    (4*\smgrid,0) to[short,-o](8*\smgrid,0);
+
+    \draw % output voltage
+    (8*\smgrid,0) to[open,v<=$v_R(t){=}v_o(t)$] (8*\smgrid,4*\smgrid); 
+  \end{circuitikz}    
+  }
+  \caption{Passive lowpass filters:~\subref{fig:figure1-RC-Circuit} Series RC circuit and~\subref{fig:figure1-RL-Circuit} a series RL circuit.}
+  \label{fig:passiveLPF}
+\end{figure}
+%
+The circuit has a time-varying input voltage given by a general sinusoid $v_i(t) =A\cos(\omega t) + B\sin(\omega t),$ where $v_i(t)$ represents the input voltage at time $t\ge 0,$ $A$ and $B$ represent its amplitudes (peak voltages~[\si{\volt}]) of  cosine and sine components, respectively, and $\omega$ is the angular frequency in~[\si{\radian\per\second}]. Note that the angular frequency $\omega = 2\pi f,$ where $f$ is the frequency of the signal in [\si{\hertz}]. The filter output $v_o(t)$ is taken across the  capacitor (resistor) of the RC (RL) circuit shown in Figure~\ref{fig:figure1-RC-Circuit} [Figure~\ref{fig:figure1-RL-Circuit}].  Each circuit shown in Figure~\ref{fig:passiveLPF} can be represented using the state--space form as: %
+%
+\begin{subequations}
+  \label{eq:stateSpaceRC}
+\begin{align}
+        \dot x(t)&\equiv \frac{\mathrm{d}x(t)}{\mathrm{dt}} =ax(t) + bu(t),\\
+        y(t)& = cx(t) + du(t),
+      \end{align}  
+\end{subequations}
+
+      %
+where $x(t)\equiv y(t) \equiv v_o(t),$  $u(t) \equiv v_i(t),$ and the model parameters:
+%
+\begin{align*}
+  \begin{cases}
+    a=-\frac{1}{RC},~~b=\frac{1}{RC},~~c=1,~~\mathrm{and}~~d=0, \qquad\text{for the series RC circuit shown in Figure~\ref{fig:figure1-RC-Circuit}, and}\\
+    a=-\frac{R}{L},~~b=\frac{R}{L},~~c=1,~~\mathrm{and}~~d=0, \qquad\text{for the series RL circuit shown in Figure~\ref{fig:figure1-RL-Circuit}.}    
+  \end{cases}
+\end{align*}
+
+ Suppose that the Laplace transformations of the input, $v_i(t),$ and the output, $v_o(t),$ are $V_i(s)$ and $V_o(s),$ respectively, where $s$ is the Laplace variable. The Laplace transfer function, $G(s),$ of the circuits shown in Figure~\ref{fig:passiveLPF} is given by: %
+%
+ \begin{align}
+   G(s) = 
+   \begin{cases}
+     \frac{1}{RCs + 1},\qquad\text{for the series RC circuit  shown in Figure~\ref{fig:figure1-RC-Circuit}, and}\\
+     \frac{\frac{R}{L}}{s + \frac{R}{L}}, \qquad\text{for the series RL circuit  shown in Figure~\ref{fig:figure1-RL-Circuit}.}
+   \end{cases}
+  \label{eq:LTF-RC}
+\end{align}
+%
+Substituting $s=j2\pi f$ in Equation~\eqref{eq:LTF-RC} yields the frequency transfer function: %
+%
+%
+\begin{align}
+  H(f) = \frac{1}{1 + j\left(\frac{f}{f_B}\right)},\qquad\text{where}
+  \label{eq:FTF-RC}
+\end{align}
+%
+break frequency, $f_B,$ is defined as: 
+\begin{align*}
+  f_B = 
+\begin{cases}
+  \frac{1}{2\pi RC}, \qquad\text{for the series RC circuit  shown in Figure~\ref{fig:figure1-RC-Circuit}, and}\\
+  \frac{R}{2\pi L}, \qquad\text{for the series RL circuit  shown in Figure~\ref{fig:figure1-RL-Circuit}.}
+\end{cases}  
+\end{align*}
+%
+The magnitude expression of the frequency transfer function is given by: %
+%
+  \begin{align}
+    \label{eq:RC-Mag}
+    \left | H(f) \right | = \frac{1}{\sqrt{1+\left(\frac{f}{f_B}\right)^2}}
+  \end{align}
+%
+and the Bode magnitude and phase expressions can be derived as: 
+%
+\begin{subequations}
+  \label{eq:BodeRC}
+  \begin{align}
+    \label{eq:BodeFirstOrder-Mag}
+    \left | H(f) \right |_{\si{\decibel}} &= -10\log_{10}\left[1+\left(\frac{f}{f_B}\right)^2\right],\\
+            \label{eq:BodeFirstOrder-Phase}
+    \angle{H(f)} & = -\angle{\left[1+j\left(\frac{f}{f_B}\right)\right]}.
+  \end{align}
+\end{subequations}
+%
+For a generic sinusoidal input signal $v_i(t) = A\cos(\omega t) + B\sin(\omega t),$ the time-domain expression of the output voltage $v_o(t)$ is: %
+%
+\begin{align}
+  v_o(t) = \left(\sqrt{A^2+B^2}\right)\left | H(f)\right | \cos\left(\omega t + \phi_i+\phi_G\right),
+  \label{eq:LPF-Out}
+\end{align}
+%
+where $\phi_i = -\tan^{-1}(B/A)$ and $\phi_G = \angle{H(f)}.$
+
+\section{Second-order Lowpass Filter}
+\label{sec:second-order-lowpass}
+Figure~\ref{fig:SOLPF} shows a second-order lowpass filter, where an inductor, $L,$ is added in series with the resistor of the first-order lowpass filter. %
+%
+%
+  \begin{figure}
+    \centering
+      \begin{circuitikz}[american]
+        % \tikzstyle{every node} = [font=\tiny];
+        \draw (0,0) to[sV,v<=$v_i(t)$,fill=green!50](0,4*\smgrid) to[R,l=$R$]
+        (4*\smgrid,4*\smgrid) to[cute inductor,l=$L$,-*](8*\smgrid,4*\smgrid)
+        to[short,-o](10*\smgrid,4*\smgrid); \draw (0,0)node[ground]{}
+        to[short,*-](8*\smgrid,0) to[pC,l=$C$](8*\smgrid,4*\smgrid); \draw
+        (8*\smgrid,0) to[short,-o](10*\smgrid,0); \draw (10*\smgrid,0*\smgrid)
+        to[open,v<=$v_o(t)$](10*\smgrid,4*\smgrid);
+      \end{circuitikz}   
+    \caption{Second-order lowpass filter.}
+    \label{fig:SOLPF}
+  \end{figure}
+%
+The  circuit shown in Figure~\ref{fig:SOLPF} can be represented using the state--space form as: %
+%
+\begin{subequations}
+  \label{eq:stateSpaceSOLPF}
+\begin{align}
+        \dot{\mathbf{x}}(t)& =\mathbf{A}\mathbf{x}(t) + \mathbf{b}u(t),\\
+        y(t)& = \mathbf{c}x(t) + du(t),
+      \end{align}  
+\end{subequations}
+%
+where $\mathbf{x}(t)\equiv [q(t),~i(t)]^T,$ $y(t)\equiv v_o(t),$  $u(t) \equiv v_i(t),$ and the model parameters:
+%
+\begin{align*}
+    \mathbf{A}=
+    \begin{bmatrix}
+      0 & 1\\
+      -\frac{1}{LC} & -\frac{R}{L}
+    \end{bmatrix},~~
+    \mathbf{b}=
+    \begin{bmatrix}
+      0\\
+      \frac{1}{L}
+    \end{bmatrix},~~
+    \mathbf{c}=
+    \begin{bmatrix}
+      \frac{1}{C} & 0
+    \end{bmatrix}
+,~~\mathrm{and}~~d=0. 
+\end{align*}
+%
+The Laplace transfer function, $G(s),$ of the circuits shown in Figure~\ref{fig:SOLPF} is given by: %
+%
+ \begin{align}
+   G(s) = \frac{1}{LCs^2+ RCs + 1}
+  \label{eq:LTF-SOLPF}
+\end{align}
+%
+Substituting $s=j2\pi f$ in Equation~\eqref{eq:LTF-SOLPF} yields the frequency transfer function: %
+%
+%
+\begin{align}
+  H(f) =  \frac{1}{\left[1-\left(\frac{f}{f_0}\right)^2\right]+j\frac{1}{Q_s}\left(\frac{f}{f_0}\right)},
+  \label{eq:FTF-RC}
+\end{align}
+%
+where $f_0$ and $Q_s$ are the resonant frequency and the quality factor, respectively. The quantities are given by %
+%
+\begin{align*}
+  f_0 = \frac{1}{2\pi\sqrt{LC}}\qquad\text{and}\qquad 
+      Q_s = \frac{2\pi f_0 L}{R} = \frac{1}{2\pi f_0CR}.
+\end{align*}
+%
+Clearly, the magnitude and phase expressions of the frequeny transfer function are derived as:  %
+%
+\begin{align*}
+  \left | H(f) \right | = \frac{1}{\sqrt{\left[1-\left(\frac{f}{f_0}\right)^2\right]^2+\left(\frac{1}{Q_s}\frac{f}{f_0}\right)^2}}\qquad\text{and}\qquad
+  \angle{H(f)} = - \angle\left[\left[1-\left(\frac{f}{f_0}\right)^2\right]+j\frac{1}{Q_s}\left(\frac{f}{f_0}\right)\right],
+\end{align*}
+%
+respectively. 
+
+
+
+\section{Prelab}
+\label{sec:prelab}
+
+You are to analyze the passive lowpass filters  shown in Figure~\ref{fig:passiveLPF} based on the theory presented in the previous section. Here, you will need to simulate both RC and RL circuits for specific parameter values.  
+
+
+\begin{prelab}[Series RC circuit]{prelab:RC-circuit}
+Given the circuit shown in Figure~\ref{fig:figure1-RC-Circuit} with $R = 1~[\kilo\ohm],$ and $C = 0.1~[\micro\farad].$ 
+      \begin{enumerate}[(a)]
+      \item  Represent the circuit in state-space form given by 
+        % 
+        \begin{align*}
+          \dot x(t) &= a x(t) + bu(t),\\
+          y(t) &= cx(t) + du(t),
+        \end{align*}
+        % 
+        \textit{i.e.}, find the values of parameters $a,$ $b,$ $c,$ and $d.$ 
+      \item Find the expression for the transfer function, $G(s) = \frac{V_o(s)}{V_i(s)},$ in the complex frequency (Laplace) domain.
+        
+      \item Find the expression for the frequency transfer function $H(f)$ and the value of the half--power frequency, $f_B,$ in [\hertz].
+      \item Plot the magnitude and phase of the frequency transfer function, $H(f),$ versus frequency (in [\hertz]) using MATLAB. [Note: You will need to have two plots;  one plot for the magnitude and a second plot for the phase.]        
+      \item  In one plot, show the input and the output of the circuit if $v_i(t) = 5\cos(10\pi t) + 5\cos(1000\pi t) +5\cos(5000\pi t),$ for $t\in[0,100t_s]~\second,$ where $t_s=\frac{1}{2f_{\mathrm{max}}}$ with $f_{\mathrm{max}}$ being the maximum frequency  (in~[\hertz])  of the input signal.
+        \end{enumerate}
+\end{prelab}
+
+\begin{prelab}[Series RL circuit]{prelab:RL-circuit}
+Given the circuit shown in Figure~\ref{fig:figure1-RL-Circuit} with $R = 1~[\kilo\ohm],$ and $L = 50~[\milli\henry].$ 
+      \begin{enumerate}[(a)]
+      \item  Represent the circuit in state-space form given by 
+        % 
+        \begin{align*}
+          \dot x(t) &= a x(t) + bu(t),\\
+          y(t) &= cx(t) + du(t),
+        \end{align*}
+        % 
+        \textit{i.e.}, find the values of parameters $a,$ $b,$ $c,$ and $d.$ 
+      \item Find the transfer function, $G(s) = \frac{V_o(s)}{V_i(s)},$ in the complex frequency (Laplace) domain.
+        
+      \item Find the frequency transfer function $H(f)$ and the value of the half--power frequency, $f_B,$ in [\hertz].
+        
+      \item Plot the magnitude and phase of the frequency transfer function, $H(f),$ versus frequency (in [\hertz]) using MATLAB. [Note: You will need to have two plots; one plot for the magnitude and a second plot for the phase.]
+        
+      \item  In one plot, show the input and the output of the circuit if $v_i(t) = 5\cos(10\pi t) + 5\cos(1000\pi t) +5\cos(5000\pi t),$ for $t\in[0,100t_s]~\second,$ where $t_s=\frac{1}{2f_{\mathrm{max}}}$ with $f_{\mathrm{max}}$ being the maximum frequency (in~[\hertz])  of the input signal.
+        \end{enumerate}
+\end{prelab}
+
+\begin{prelab}[Series RLC circuit]{prelab:RLC-circuit}
+Given the circuit shown in Figure~\ref{fig:SOLPF} with $R = 707~[\ohm],$ $L = 50~[\milli\henry],$ and $C = 200~[\nano\farad].$ 
+      \begin{enumerate}[(a)]
+      \item  Represent the circuit in state-space form given by 
+        %
+        \begin{align*}
+          \dot{\mathbf{x}}(t)& =\mathbf{A}\mathbf{x}(t) + \mathbf{b}u(t),\\
+          y(t)& = \mathbf{c}x(t) + du(t),
+        \end{align*}
+        %
+        \textit{i.e.}, find the values of parameters $\mathbf{A},$ $\mathbf{b},$ $\mathbf{c},$ and $d.$ 
+      \item Find the transfer function, $G(s) = \frac{V_o(s)}{V_i(s)},$ in the complex frequency (Laplace) domain.
+        
+      \item Find the frequency transfer function $H(f)$ and the value of the resonant frequency, $f_0,$ in [\hertz] and the quality factor $Q_s.$
+        
+      \item Plot the magnitude and phase of the frequency transfer function, $H(f),$ versus frequency (in $\hertz$) using MATLAB. [Note: You will need to have two plots; one plot for the magnitude and a second plot for the phase.]
+        
+      \item  In one plot, show the input and the output of the circuit if $v_i(t) = 5\cos(200\pi t) + 5\cos(2000\pi t) +5\cos(20000\pi t),$ for $t\in[0,100t_s]~\second,$ where $t_s=\frac{1}{2f_{\mathrm{max}}}$ with $f_{\mathrm{max}}$ being the maximum frequency (in~[\hertz])  of the input signal.
+        \end{enumerate}
+ \end{prelab}
+      
+
+\section{Laboratory Work}
+
+You will test the passive lowpass filters simulated in the prelab. 
+\subsection{Part~1}
+\label{sec:part1}
+
+
+\begin{enumerate}
+
+ 
+\item Measure the values of the $1~[\kilo\ohm]$ resistor $(R)$ and the $0.1~[\micro\farad]$ capacitor $(C).$ Then, complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Quantity &  Ideal & Measured\\
+      \toprule
+      $R$ & $\ldots$ & $\ldots$\\   %|| R = 
+      $C$ & $\ldots$ & $\ldots$\\   %|| C = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Construct the circuit shown in Figure~\ref{fig:figure1-RC-Circuit} using the components measured in the previous step. 
+
+\item  Turn on the function generator and generate a $v_i(t) = 5\sin(2000\pi t)~[\volt]$ sinusoidal waveform and connect the function generator to the input terminals of the circuit that you built. 
+
+  
+\item Connect the oscilloscope (two channels) to the input and output terminals, and the record the data in the table below. %
+%
+    \begin{center}
+    \begin{tabular}{c|c|c|c|c|c}
+      \toprule
+      Frequency &  $V_{\mathrm{PP,input}}$ & $V_{\mathrm{PP,output}}$ & Phase difference & $\left |H(f) \right |$ & $\left |H(f) \right |_{\decibel}$\\
+      \toprule
+      ~ & ~ & ~ & ~ & ~ & ~\\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+%  
+  
+
+  
+\item Change the frequency of the input signal (waveform) and complete the following table
+%
+    \begin{center}
+    \begin{tabular}{l|c|c|c|c|c}
+      \toprule
+      Frequency &  $V_{\mathrm{PP,input}}$ & $V_{\mathrm{PP,output}}$ & Phase difference & $\left |H(f) \right |$ & $\left |H(f) \right |_{\decibel}$\\
+      \toprule
+      $20~[\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $200~[\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $2~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $20~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $200~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $2~[\mega\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $20~[\mega\hertz]$ & ~ & ~ & ~ & ~ & ~\\      
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+%  
+\item Compare the measured values of the filter gain $\left|H(f)\right |_{\decibel}$ and the theoretical values of $\left|H(f)\right |_{\decibel}$ using Equation~\eqref{eq:BodeFirstOrder-Mag} and, then discuss any discrepancy.   
+
+ \end{enumerate}
+
+
+ \subsection{Part~2}
+\label{sec:part2}
+
+
+\begin{enumerate}
+
+ 
+\item Measure the values of the $1~[\kilo\ohm]$ resistor $(R)$ and the $50~[\milli\henry]$ inductor $(L).$ Then, complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Quantity &  Ideal & Measured\\
+      \toprule
+      $R$ & $\ldots$ & $\ldots$\\   %|| R = 
+      $L$ & $\ldots$ & $\ldots$\\   %|| L = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Construct the circuit shown in Figure~\ref{fig:figure1-RL-Circuit} using the components measured in the previous step. 
+
+\item  Turn on the function generator and generate a $v_i(t) = 5\sin(2000\pi t)~[\volt]$ sinusoidal  waveform and connect the function generator to the input terminals of the circuit that you built. 
+
+  
+\item Connect the oscilloscope (two channels) to the input and output terminals, and then record the data in the following table. %
+%
+    \begin{center}
+    \begin{tabular}{c|c|c|c|c|c}
+      \toprule
+      Frequency &  $V_{\mathrm{PP,input}}$ & $V_{\mathrm{PP,output}}$ & Phase difference & $\left |H(f) \right |$ & $\left |H(f) \right |_{\decibel}$\\
+      \toprule
+      ~ & ~ & ~ & ~ & ~ & ~\\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+%  
+    
+\item Change the frequency of the input signal (waveform) and complete the following table. %
+%
+    \begin{center}
+    \begin{tabular}{l|c|c|c|c|c}
+      \toprule
+      Frequency &  $V_{\mathrm{PP,input}}$ & $V_{\mathrm{PP,output}}$ & Phase difference & $\left |H(f) \right |$ & $\left |H(f) \right |_{\decibel}$\\
+      \toprule
+      $20~[\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $200~[\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $2~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $20~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $200~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $2~[\mega\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $20~[\mega\hertz]$ & ~ & ~ & ~ & ~ & ~\\      
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+%  
+\item Compare the measured values of the filter gain $\left|H(f)\right |_{\decibel}$ and the theoretical values of $\left|H(f)\right |_{\decibel}$ using Equation~\eqref{eq:BodeFirstOrder-Mag}, and then discuss any discrepancy.   
+
+ \end{enumerate}
+ 
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../labBookMechatronics-V2"
+%%% End:

@@ -1,0 +1,304 @@
+\section{Objectives}
+By the end of this laboratory experiment, students will learn how to 
+
+\begin{itemize}
+\item design an active lowpass filter circuit to filter out noisy input signals and 
+  
+\item anyalyze frequency response of a first-order active circuit.  
+
+\end{itemize}
+
+\section{Parts}
+\label{sec:partsEx10}
+
+\begin{enumerate}
+\item Breadboard  
+\item Four $1.0~[\kilo\ohm]$ resistors
+% \item One $10.0~[\kilo\ohm]$ resistor
+\item Two LMC6482\footnote{See its datasheet at \href{http://www.ti.com/lit/ds/symlink/lmc6482.pdf}{http://www.ti.com/lit/ds/symlink/lmc6482.pdf}} dual operational amplifier ICs, and   
+\item One $0.1~[\micro\farad]$ capacitor.
+  
+\end{enumerate}
+
+\section{Background}
+\label{sec:background}
+In Laboratory~\ref{chap:passiveLPF}, passive components (resistors, capacitors, and inductors) were used to implement lowpass filter circuits.  Note that passive filters do not require an external power source to operate. However, active filters use active components which require seperate power supplies. In this laboratory experiment,  an active lowpass filter will be designed and tested that will attenuate high frequency components, but amplify and pass low frequency  components below a certain threshold frequency. Figure~\ref{fig:activeLPF} shows the circuit diagram of an active lowpass filter followed by an inverter with $R_3=R_4=R.$ It uses an operational amplifier as an active component. %
+%
+\begin{figure}
+  \centering
+  \begin{circuitikz}[scale=1.0,american voltages]
+    \draw 
+    (8.0*\smgrid,-0.4)node[op amp,fill=cyan!50](opampIntegrator){};
+    \draw
+    (0,0) to[R,l^=$R_1$, o-*] (opampIntegrator.-);
+    \draw
+    (opampIntegrator.-) --(5.6*\smgrid,3*\smgrid)  to[C,l_=$C$] (10.4*\smgrid,3*\smgrid) to[short,*-*](opampIntegrator.out);%node[right]{$v_o(t)$};
+    \draw
+    (5.6*\smgrid,3*\smgrid)node[]{$\bullet$}--  (5.6*\smgrid,6*\smgrid) to[R, l_=$R_2$] (10.4*\smgrid,6*\smgrid) --(10.4*\smgrid,3*\smgrid)node[]{$\bullet$};
+    \draw
+    (opampIntegrator.+) to[short,-o](0,-1.0)node[ground]{};
+    \draw
+    (-0.2,-1.0) to[open,v<=$v_i(t)$] (-0.2,0);
+    %%% Inverter
+    \draw
+    (16.0*\smgrid,-0.8)node[op amp,fill=cyan!50](opampInverter){};
+    \draw
+    (opampIntegrator.out) to[R,l^=$R_3$] (opampInverter.-)node[]{$\bullet$} -- (13.6*\smgrid,3*\smgrid) to[R,l^=$R_4$] (18.4*\smgrid,3*\smgrid) --(opampInverter.out) to[short,-o] (19*\smgrid,-0.8);
+    \draw
+    (opampInverter.+)node[ground]{};
+    \draw
+    (19*\smgrid,-1.5) to[short,-o] (19*\smgrid,-1.5)node[ground]{};
+    \draw
+    (19.4*\smgrid,-1.5) to[open,v<=$v_o(t)$] (19.4*\smgrid,-0.8);
+  \end{circuitikz}
+  \caption{A first-order active lowpass filter with an inverter circuit.}
+  \label{fig:activeLPF}
+\end{figure}
+%
+The circuit has a time-varying input voltage given by a general sinusoid $v_i(t) =A\cos(\omega t) + B\sin(\omega t),$ where $v_i(t)$ represents the input voltage at time $t\ge 0,$ $A$ and $B$ represent its amplitudes (peak voltages~[\si{\volt}]) of  $\cos$ and $\sin$ components, respectively, and $\omega$ is the angular frequency in~[\si{\radian\per\second}]. Note that the angular frequency is $\omega = 2\pi f,$ where $f$ is the frequency of the signal in [\si{\hertz}]. The filter output $v_o(t)$ is taken from the output of the inverter (the second operational amplifier from the left).  The circuit shown in Figure~\ref{fig:activeLPF} can be represented using the state--space form as: %
+%
+\begin{subequations}
+  \label{eq:stateSpaceRC}
+\begin{align}
+        \dot x(t)&\equiv \frac{\mathrm{d}x(t)}{\mathrm{dt}} =ax(t) + bu(t),\\
+        y(t)& = cx(t) + du(t),
+      \end{align}  
+\end{subequations}
+%
+where $x(t)\equiv y(t) \equiv v_o(t),$  $u(t) \equiv v_i(t),$ and the model parameters: %
+$a=-\frac{1}{R_2C},~b=\frac{1}{R_1C},~~c=1,~\mathrm{and}~~d=0.$
+%
+ Suppose that the Laplace transformations of the input, $v_i(t),$ and the output, $v_o(t),$ are $V_i(s)$ and $V_o(s),$ respectively, where $s$ is the Laplace variable. The Laplace transfer function, $G(s),$ of the circuit shown in Figure~\ref{fig:activeLPF} are given by: %
+%
+ \begin{align}
+   G(s) = \frac{V_o(s)}{V_i(s)}= \left(\frac{R_2}{R_1}\right)\frac{1}{R_2Cs + 1}.
+  \label{eq:LTF-activeLPF}
+\end{align}
+%
+Substituting $s=j2\pi f$ in Equation~\eqref{eq:LTF-activeLPF} yields the frequency transfer function: %
+%
+%
+\begin{align}
+  H(f) = \frac{R_2}{R_1\left[1 + j\left(\frac{f}{f_B}\right)\right]},
+  \label{eq:FTF-activeLPF}
+\end{align}
+%
+where break frequency, $f_B,$ is defined as: 
+\begin{align*}
+  f_B = \frac{1}{2\pi R_2C}.
+\end{align*}
+%
+The magnitude expression of the frequency transfer function is given by: %
+%
+  \begin{align}
+    \label{eq:activeLPF-Mag}
+    \left | H(f) \right | = \left(\frac{R_2}{R_1}\right)\frac{1}{\sqrt{1+\left(\frac{f}{f_B}\right)^2}}
+  \end{align}
+%
+and the Bode magnitude and phase expressions can be derived as: 
+%
+\begin{subequations}
+  \label{eq:BodeActiveLPF}
+  \begin{align}
+    \label{eq:BodeFirstOrder-MagActive}
+    \left | H(f) \right |_{\si{\decibel}} &= -10\log_{10}\left[1+\left(\frac{f}{f_B}\right)^2\right],\\
+            \label{eq:BodeFirstOrder-PhaseActive}
+    \angle{H(f)} & = -\angle{\left[1+j\left(\frac{f}{f_B}\right)\right]}.
+  \end{align}
+\end{subequations}
+%
+For the input sinusoidal input $v_i(t) = A\cos(\omega t) + B\sin(\omega t),$ the time-domain expression of the output voltage $v_o(t)$ is: %
+%
+\begin{align}
+  v_o(t) = \left(\sqrt{A^2+B^2}\right)\left | H(f)\right | \cos\left(\omega t + \phi_i+\phi_G\right),
+  \label{eq:LPF-OutActive}
+\end{align}
+%
+where $\phi_i = -\tan^{-1}(B/A)$ and $\phi_G = \angle{H(f)}.$
+
+Active lowpass filter can also be designed using a first-order RC circuit and a non-inverting amplifer as shown in Figure~\ref{fig:activeLPF-NonInvertingOpAmp}. The frequency response of the filter shown in Figure~\ref{fig:activeLPF-NonInvertingOpAmp} is the same as that of a passive RC filter except that the amplitude of the output voltage $v_o(t)$ will be multiplied by the DC gain $A_F,$ where %
+%
+\begin{align*}
+  A_F = 1+\frac{R_2}{R_1}.
+\end{align*}
+
+\begin{figure}
+  \centering
+  \begin{circuitikz}[american voltages]
+    \draw
+    (0,0) to[sV,l^=$v_i(t)$,fill=green!50] (0,4*\smgrid) to[R,v_>=$v_R(t)$, l^=$R$] (4*\smgrid,4*\smgrid);
+    % draw capacitor
+    \draw 
+    (4*\smgrid,0) to[pC, v_<=$C$] (4*\smgrid,4*\smgrid);
+    % draw ground
+    \draw (0,0) to[short,-*](4*\smgrid,0) node[ground]{};
+    % Output
+    \draw
+    (4*\smgrid,4*\smgrid) to[short](8*\smgrid,4*\smgrid);
+    % \draw 
+    % (4*\smgrid,0) to[short](8*\smgrid,0);
+    % \draw % output voltage
+    % (8*\smgrid,0) to[open,v<=$v_C(t){=}v_o(t)$] (8*\smgrid,4*\smgrid);
+    \draw
+    (10*\smgrid,5*\smgrid)node[op amp,fill=cyan!50](opAmpNonInverting){$A_F$};
+    \draw
+    (opAmpNonInverting.-) to[R,l=$R_1$] ($(opAmpNonInverting.-)+(0,7*\smgrid)$) --++(\smgrid,0)node[ground]{};
+    \draw
+    (opAmpNonInverting.out) -- ($(opAmpNonInverting.out)+(0,3*\smgrid)$)  to[R,l=$R_2$,-*] ($(opAmpNonInverting.-)+(0,2*\smgrid)$);
+    \draw 
+    (opAmpNonInverting.out) to[short,-o]($(opAmpNonInverting.out)+(\smgrid,0)$) to[open,v>=$v_o(t)$]($(opAmpNonInverting.out)+(\smgrid,-5*\smgrid,0)$) to[short,o-](4*\smgrid,0);
+    
+  \end{circuitikz}    
+  \caption{Active lowpass filter using non-inverting op-amp.}
+  \label{fig:activeLPF-NonInvertingOpAmp}
+\end{figure}
+%
+The circuit shown in Figure~\ref{fig:activeLPF-NonInvertingOpAmp} can be represented using the state--space form as: %
+%
+\begin{subequations}
+  \label{eq:stateSpaceactiveLPF-NonInvertingOpAmp}
+\begin{align}
+        \dot x(t)&\equiv \frac{\mathrm{d}x(t)}{\mathrm{dt}} =ax(t) + bu(t),\\
+        y(t)& = cx(t) + du(t),
+      \end{align}  
+\end{subequations}
+%
+where $x(t)\equiv y(t) \equiv v_o(t),$  $u(t) \equiv v_i(t),$ and the model parameters: %
+$a=-\frac{1}{RC},~b=\frac{A_F}{RC},~~c=1,~\mathrm{and}~~d=0.$
+%
+
+
+\section{Prelab}
+\label{sec:prelab}
+
+You are to analyze the active lowpass filters  shown in Figures~\ref{fig:activeLPF}~and~\ref{fig:activeLPF-NonInvertingOpAmp} based on the theory presented in the previous section. Here, you will simulate the circuit for specific parameter values.
+
+
+\begin{prelab}[Active lowpass filter]{prelab:activeLPF}
+Given the circuit shown in Figure~\ref{fig:activeLPF} with $R_1 = R_2=R_3 = R_4=R=1.0~[\kilo\ohm],$ and $C = 0.1~[\micro\farad].$ 
+      \begin{enumerate}[(a)]
+      \item  Represent the circuit in state-space form given by 
+        % 
+        \begin{align*}
+          \dot x(t) &= a x(t) + bu(t),\\
+          y(t) &= cx(t) + du(t),
+        \end{align*}
+        % 
+        \textit{i.e.}, find the values of parameters $a,$ $b,$ $c,$ and $d.$ 
+      \item Find the expression for the transfer function, $G(s) = \frac{V_o(s)}{V_i(s)},$ in the complex frequency (Laplace) domain.
+        
+      \item Find the expression of the frequency transfer function $H(f)$ and the value of the half--power frequency, $f_B,$ in [\hertz].
+      \item Plot the magnitude and the phase of the frequency transfer function, $H(f),$ versus the frequency (in [\hertz]) using MATLAB. [Note: You will need to have two plots; one plot for the magnitude and a second plot for the phase.]
+      \item  In one plot, show the input and the output of the circuit if $v_i(t) = 5\cos(10\pi t) + 5\cos(1000\pi t) +5\cos(5000\pi t),$ for $t\in[0,100t_s]~\second,$ where $t_s=\frac{1}{2f_{\mathrm{max}}}$ with $f_{\mathrm{max}}$ being the maximum frequency of the input signal (in~[\hertz]).
+        \end{enumerate}
+\end{prelab}
+
+\begin{prelab}[Active lowpass filter using non-inverting op-amp]{prelab:activeLPF-NonInvertingOpAmp}
+Given the circuit shown in Figure~\ref{fig:activeLPF-NonInvertingOpAmp} with $R_1 = 1~[\kilo\ohm],~R_2=9~[\kilo\ohm],~R=10~[\kilo\ohm],$ and $C =100~[\nano\farad].$ 
+      \begin{enumerate}[(a)]
+      \item  Represent the circuit in state-space form given by 
+        % 
+        \begin{align*}
+          \dot x(t) &= a x(t) + bu(t),\\
+          y(t) &= cx(t) + du(t),
+        \end{align*}
+        % 
+        \textit{i.e.}, find the values of parameters $a,$ $b,$ $c,$ and $d.$  
+      \item Find the expression for the transfer function, $G(s) = \frac{V_o(s)}{V_i(s)},$ in the complex frequency (Laplace) domain.
+        
+      \item Find the expression of the frequency transfer function $H(f)$ and the value of the half--power frequency, $f_B,$ in [Hz].
+      \item Plot the magnitude and the phase of the frequency transfer function, $H(f),$ versus the frequency (in $\hertz$) using MATLAB. [Note: You will need to have two plots; one plot for the magnitude and a second plot for the phase.]
+      \item  In one plot, show the input and the output of the circuit if $v_i(t) = 5\cos(10\pi t) + 5\cos(1000\pi t) +5\cos(5000\pi t),$ for $t\in[0,100t_s]~\second,$ where $t_s=\frac{1}{2f_{\mathrm{max}}}$ with $f_{\mathrm{max}}$ being the maximum frequency of the input signal (in~[\hertz]).
+        \end{enumerate}
+\end{prelab}
+
+\section{Laboratory Work}
+
+You will test the active lowpass filter similated in the prelab. 
+% \subsection{Part~1}
+% \label{sec:part1}
+
+
+\begin{enumerate}
+
+ 
+\item Measure the resistance of the $1~[\kilo\ohm]$ resistors $(R_1,R_2,R_3,$ and $R_4)$ and the capacitance of the $0.1~[\micro\farad]$ capacitor $(C).$ Then, complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Quantity &  Ideal & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 =
+      $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 =       
+      $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 =
+      $R_4$ & $\ldots$ & $\ldots$\\   %|| R_4 =       
+      $C$ & $\ldots$ & $\ldots$\\   %|| C = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Construct the circuit shown in Figure~\ref{fig:activeLPF} using the components measured in the previous step. 
+
+\item  Turn on the function generator to generate a $v_i(t) = 5\sin(4\pi t)~[\volt]$ sinusoidal waveform and connect the function generator to the input terminals of the circuit that you built.
+
+\item Connect the oscilloscope (two channels) with the input and the output terminals and record the data in the following table. %
+%
+    \begin{center}
+    \begin{tabular}{c|c|c|c|c|c}
+      \toprule
+      Frequency &  $V_{\mathrm{PP,input}}$ & $V_{\mathrm{PP,output}}$ & Phase difference & $\left |H(f) \right |$ & $\left |H(f) \right |_{\decibel}$\\
+      \toprule
+      ~ & ~ & ~ & ~ & ~ & ~\\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+%  
+  
+
+  
+\item Change the frequency of the input signal (waveform) and complete the following table.
+%
+    \begin{center}
+    \begin{tabular}{l|c|c|c|c|c}
+      \toprule
+      Frequency &  $V_{\mathrm{PP,input}}$ & $V_{\mathrm{PP,output}}$ & Phase difference & $\left |H(f) \right |$ & $\left |H(f) \right |_{\decibel}$\\
+      \toprule
+      $20~[\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $200~[\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $2~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $20~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $200~[\kilo\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $2~[\mega\hertz]$ & ~ & ~ & ~ & ~ & ~\\
+      $20~[\mega\hertz]$ & ~ & ~ & ~ & ~ & ~\\      
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+%  
+\item Compare the measured values of the filter gain $\left|H(f)\right |_{\decibel}$ and the theoretical values of $\left|H(f)\right |_{\decibel}$ using Equation~\eqref{eq:BodeFirstOrder-MagActive}, and then discuss any discrepancy.
+
+ \end{enumerate}
+ 
+% \section{Deliverables}
+% Record all your measurements and analysis in your lab notebook and submit the notebook in the next lab session. 
+
+% \begin{itemize}
+% \item Demonstrate your work to the Professor or the GA before leaving the lab. 
+% % \item Upload labDC\_Motor2\_Main.vhdl through Sakai under \emph{Assignments/labDC-Motor2-Main (FPGA--based motor control)}
+% \item No report (or notebook)  is required for this lab.
+% \end{itemize}
+
+% \begin{thebibliography}{9}
+% \bibitem{Buchla2010} 
+% David M. Buchla.
+% \textit{Experiments in Electronics Fundamentals and Electric Circuits Fundamentals}. 
+% Pearson Education, Inc., 2010.
+
+% \end{thebibliography}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../labHandoutECE227-V1"
+%%% End:

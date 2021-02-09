@@ -1,0 +1,777 @@
+\section{Objectives}
+By the end of this laboratory experiment, students are expected to learn how to 
+
+\begin{itemize}
+\item work with multiple voltage and current sources (DC), and   
+\item use circuit analysis techniques to determine and verify the voltage, current, and power associated with  circuit elements. 
+\end{itemize}
+
+\section{Parts}
+\label{sec:partsEx4}
+
+\begin{itemize}
+\item Breadboard  
+\item One $50~[\ohm]$ resistor
+\item Five $100~[\ohm]$ resistors  
+\item One $3.3~[\kilo\ohm]$ resistor
+\item One $4.7~[\kilo\ohm]$ resistor
+\item One $5.6~[\kilo\ohm]$ resistor  
+\item One $10~[\kilo\ohm]$ resistor
+\end{itemize}
+
+\section{Background}
+\label{sec:background}
+
+In this laboratory experiment, you will mainly be working with electrical circuits that consist of resistors and independent voltage sources connected together. The process of mathematically predicting the current, voltage, and power associated with each element in an electrical circuit is typically termed as the circuit analysis. There are several techniques that can be used to analyze an electrical circuit. In this laboratory work, you will  be analyzing electrical circuits with independent voltage  sources (could be current sources as well) using the techniques listed below: %
+%
+    \begin{itemize}
+      
+    \item Node-voltage analysis, 
+      
+    \item Mesh-current analysis,
+
+    \item Superposition principle, and 
+    
+    \item Th\'evenin equivalent circuits.
+
+    \end{itemize}
+
+
+
+
+
+\subsection{Part~1: Node-voltage Analysis}
+\label{sec:nodeVoltageAnalyses}
+Before we analyze a circuit using the node-voltage analysis technique, let us define a \emph{node} of an electrical circuit. A \emph{node} in an electrical circuit is a point where two or more circuit elements are connected together. A node voltage is measured with respect to a \emph{reference node} which is  normally earth ground, and is typically marked with the \emph{ground symbol} shown in Figure~\ref{fig:figure1-nodeV}. %
+%
+\begin{figure}
+  \centering
+  \begin{circuitikz}[american]
+    \draw
+    (0,0)node[]{$\bullet$} to[V=$V_{s1}$,invert,fill=green!50](0,6*\smgrid) to[R,v>=$V_1$,l=$R_1$,i=$I_1$,-*] (6*\smgrid,6*\smgrid)node[above]{A} to[R,v>=$V_2$,l=$R_2$,i=$I_2$,-*](12*\smgrid,6*\smgrid)node[above]{B} to[R,v>=$V_5$,l=$R_5$,i=$I_5$](18*\smgrid,6*\smgrid) to[V,v>=$V_{s2}$,fill=green!50](18*\smgrid,0)--(0,0)node[ground]{};
+    \draw
+    (6*\smgrid,6*\smgrid) to[R,v>=$V_A{=}V_3$,l=$R_3$,i=$I_3$](6*\smgrid,0);
+    \draw
+    (12*\smgrid,6*\smgrid) to[R,v>=$V_B{=}V_4$,l=$R_4$,i=$I_4$](12*\smgrid,0);
+    \draw
+    (2*\smgrid,-\smgrid)node[]{Ground};
+    % \draw[ultra thick, ->] (6.5,0) arc (0:220:1);
+  \end{circuitikz}
+  \caption{Circuit  used for node-voltage analysis.}
+  \label{fig:figure1-nodeV}
+\end{figure}
+%
+% \begin{figure}
+%     \centering
+%     \includegraphics[scale=1.5]{figs/ipe/lab4/figure1-nodeV}
+%     \caption{Circuit used for node-voltage analysis.}
+%     \label{fig:figure1-nodeV}
+% \end{figure}
+
+Let us analyze the circuit shown in Figure~\ref{fig:figure1-nodeV} using the node-voltage analysis technique, where node voltages are to be determined first. Assume that $V_A$ and $V_B$ denote the voltages (with respect to the ground) at nodes $A$ and $B,$ respectively. Therefore, $V_A=V_3$ and $V_B=V_4.$ Once the node-voltages have been  determined, it is relatively easy to find the current, voltage, and power for each element of the circuit. Applying KCL at \emph{node A} yields %
+%
+\begin{align}
+  I_1 &= I_2 + I_3\\
+  \Rightarrow\frac{V_{s1} - V_A}{R_1} &= \frac{V_A-V_B}{R_2} + \frac{V_A}{R_3}.
+  \label{eq:KCL-NodeA}
+\end{align}
+%
+Similarly, applying KCL at \emph{node B} gives %
+%
+\begin{align}
+  I_2 & = I_4+I_5\\
+  \Rightarrow\frac{V_A - V_B}{R_2} &= \frac{V_B}{R_4} + \frac{V_B-V_{s2}}{R_5}.
+  \label{eq:KCL-NodeB}
+\end{align}
+%
+Equations~\eqref{eq:KCL-NodeA}~and~\eqref{eq:KCL-NodeB} can be written in matrix form as %
+%
+\begin{align}
+  \begin{bmatrix}
+    \frac{1}{R_1}+\frac{1}{R_2}+\frac{1}{R_3} & -\frac{1}{R_2}\\
+    -\frac{1}{R_2} & \frac{1}{R_2}+\frac{1}{R_4}+\frac{1}{R_5}\\    
+  \end{bmatrix}
+  \begin{bmatrix}
+    V_A\\
+    V_B
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    \frac{V_{s1}}{R_1}\\
+    \frac{V_{s2}}{R_5}    
+  \end{bmatrix}.
+  \label{eq:KCL}
+\end{align}
+%
+Denoting $G_i=\frac{1}{R_i}$ as the conductance of resistor $i,$ for $i=1,2,\ldots, 5,$ Equation~\eqref{eq:KCL} can be written in compact form as %
+%
+\begin{align}
+  {\bf G}{\bf V} = {\bf I},~~\text{where}
+  \label{eq:nodeVoltage}
+\end{align}
+%
+\begin{align*}
+  \text{the conductance matrix:~}{\bf G} =
+    \begin{bmatrix}
+    G_1+G_2+G_3 & -G_2\\
+    -G_2 & G_2+G_4+G_5\\    
+  \end{bmatrix}
+  ,~~\text{node voltages:~}
+  {\bf V} =
+  \begin{bmatrix}
+    V_A\\
+    V_B
+  \end{bmatrix}
+  ,~~\text{and}~~
+  {\bf I} =
+    \begin{bmatrix}
+    G_1V_{s1}\\
+    G_5V_{s2}    
+  \end{bmatrix}.
+\end{align*}
+%
+The node voltages can simply be solved using %
+%
+\begin{align}
+\boxed{  {\bf V} = {\bf G}^{-1}{\bf I}.}
+  \label{eq:nodeVoltageSolution}
+\end{align}
+
+The current, voltage, and power for each element of the circuit shown in Figure~\ref{fig:figure1-nodeV} can simply be found using Ohm's law and power equations. 
+
+
+\subsection{Part~2: Mesh-current Analysis}
+\label{sec:meshCurrentAnalysis}
+We shall consider a planar electrical circuit (\textit{i.e.,~} one circuit element does not cross over another) as shown in Figure~\ref{fig:figure2-meshC}. %
+%
+\begin{figure}
+  \centering
+  \begin{circuitikz}[american]
+    \draw
+    (0,0)node[]{$\bullet$} to[V=$V_{s1}$,invert,fill=green!50](0,6*\smgrid) to[R,v>=$V_1$,l^=$R_1$,i=~,-*] (6*\smgrid,6*\smgrid)node[above]{A} to[R,v>=$V_2$,l=$R_2$,i=~,-*](12*\smgrid,6*\smgrid)node[above]{B} to[R,v>=$V_5$,l=$R_5$,i=~](18*\smgrid,6*\smgrid) to[V,v>=$V_{s2}$,fill=green!50](18*\smgrid,0)--(0,0)node[ground]{};
+    \draw
+    (6*\smgrid,6*\smgrid) to[R,v>=$V_3$,l=$R_3$,i=~](6*\smgrid,0);
+    \draw
+    (12*\smgrid,6*\smgrid) to[R,v>=$V_4$,l=$R_4$,i=~](12*\smgrid,0);
+    % Draw meshes 
+    \draw[blue,ultra thick, ->]
+    (1.5*\smgrid,2.5*\smgrid) arc (180:-90:0.7);
+    \draw
+    (2.2*\smgrid,\smgrid) node[]{\textcolor{blue}{$I_1^{'}$}};
+    \draw
+    (2.4*\smgrid,2*\smgrid) node[]{\textcolor{blue}{{\footnotesize Mesh\#1}}};
+
+    \draw[blue, ultra thick, ->]
+    (7.6*\smgrid,2.5*\smgrid) arc (180:-90:0.7);
+    \draw
+    (8.2*\smgrid,\smgrid) node[]{\textcolor{blue}{$I_2^{'}$}};
+    \draw
+    (8.4*\smgrid,2*\smgrid) node[]{\textcolor{blue}{{\footnotesize Mesh\#2}}};
+
+    \draw[blue, ultra thick, ->]
+    (13.6*\smgrid,2.5*\smgrid) arc (180:-90:0.7);
+    \draw
+    (14.2*\smgrid,\smgrid) node[]{\textcolor{blue}{$I_3^{'}$}};
+    \draw
+    (14.4*\smgrid,2*\smgrid) node[]{\textcolor{blue}{{\footnotesize Mesh\#3}}};
+    
+  \end{circuitikz}
+  \caption{Circuit  used for mesh-current analysis.}
+  \label{fig:figure2-meshC}
+\end{figure}
+%
+% %
+% \begin{figure}
+%     \centering
+%     \includegraphics[scale = 1.5]{figs/ipe/lab4/figure2-meshC.eps}
+%     \caption{Circuit used for mesh-current analysis.}
+%     \label{fig:figure2-meshC}
+% \end{figure}
+% %
+The circuit has three mesh-currents, $I_1^{'},$ $I_2^{'},$ and $I_3^{'}$ corresponding to the clockwise directions for mesh~\#1, mesh~\#2, and mesh~\#3, respectively. We first solve the mesh-currents of the circuit by applying KVL around each mesh. Therefore, we will have three equations given by %
+%
+\begin{subequations}
+\label{eq:KVL-MeshCurrent}
+\begin{align}
+  -V_{s1} + I_1^{'}R_1+(I_1^{'}-I_2^{'})R_3 &= 0\\
+  (I_2^{'}-I_1^{'})R_3 + I_2^{'}R_2 + (I_2^{'}-I_3^{'})R_4 & = 0\\
+  (I_3^{'}-I_2^{'})R_4 + I_3^{'}R_5 + V_{s2} & = 0  
+\end{align}  
+\end{subequations}
+%
+Equations in~\eqref{eq:KVL-MeshCurrent} can be written in matrix form as %
+%
+\begin{align}
+  \begin{bmatrix}
+    R_1+R_3  & -R_3 & 0\\
+    -R_3 & R_2+R_3+R_4 & -R_4\\
+    0 & -R_4 & R_4+R_5
+  \end{bmatrix}
+  \begin{bmatrix}
+    I_1^{'}\\
+    I_2^{'}\\
+    I_3^{'}
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    V_{s1}\\
+    0\\
+    -V_{s2}
+  \end{bmatrix}
+  \label{eq:KVL-MeshCurrent1}
+\end{align}
+%
+Equation~\eqref{eq:KVL-MeshCurrent1} can be written in compact form as %
+%
+\begin{align}
+  {\bf R}{\bf I} = {\bf V},~~\text{where}
+  \label{eq:meshCurrent}
+\end{align}
+%
+the resistance matrix~$\mathbf{R},$ the mesh current vector~${\bf I},$ and the source voltage vector $\mathbf{V}$ are given by 
+%
+\begin{align*}
+  {\bf R} &=
+  \begin{bmatrix}
+    R_1+R_3  & -R_3 & 0\\
+    -R_3 & R_2+R_3+R_4 & -R_4\\
+    0 & -R_4 & R_4+R_5
+  \end{bmatrix}
+  ,~~
+{\bf I} =
+  \begin{bmatrix}
+    I_1^{'}\\
+    I_2^{'}\\
+    I_3^{'}
+  \end{bmatrix}
+  ,~\text{and}\\
+  {\bf V} &=
+  \begin{bmatrix}
+    V_{s1}\\
+    0\\
+    -V_{s2}
+  \end{bmatrix}.
+\end{align*}
+%
+The mesh currents can simply be solved using %
+%
+\begin{align}
+{\bf I} = {\bf R}^{-1}{\bf V}.
+  \label{eq:meshCurrentSolution}
+\end{align}
+%
+\begin{mdframed}[roundcorner=5pt,backgroundcolor=yellow!5]
+  The overall current flowing through a circuit element is equal to the algebraic sum of all the mesh-currents flowing through that element. 
+\end{mdframed}
+
+The voltage and power for each element of the circuit shown in Figure~\ref{fig:figure2-meshC} can simply be found using Ohm's law and power equations.
+
+\subsection{Part~3: Superposition Principle}
+\label{sec:superpositionPrinciple}
+Before analyzing an electrical circuit using the superposition principle, let us define the \emph{response} as the current flowing through an element or the voltage across it. The superposition principle is stated below for convenience. 
+
+\begin{mdframed}[roundcorner=5pt,backgroundcolor=yellow!5]
+In a linear circuit,   the total response of a circuit element is the sum of the responses for  each independent source acting alone with the other independent sources zeroed.  
+\end{mdframed}
+Note that an independent current (voltage) source is zeroed when it is an open (short) circuit. Mathematically, suppose that there are $n$  independent sources. Let $r_i$ denote the response of a circuit element to the independent source $i,$ for $i=1,2,\ldots,n.$ Applying the superposition principle yields %
+%
+\begin{align*}
+  r_T = r_1 + r_2+\ldots + r_n,
+  % \label{eq:superpositionPrinciple}
+\end{align*}
+%
+where $r_T$ is the total response of the circuit element.
+
+Consider the circuit shown in Figure~\ref{fig:figure3-SuperP}. %
+%
+\begin{figure}
+  \centering
+  \begin{circuitikz}[american]
+    \draw
+    (0,0) to[V=$V_{s1}$,invert,fill=green!50](0,5*\smgrid) to[R,v>=$V_1$,l=$R_1$,i=$I_1$,-*](6*\smgrid,5*\smgrid)node[anchor=south]{A} to[R,v>=$V_A{=}V_3$,l=$R_3$,i=$I_A$](6*\smgrid,0) to[short,-*](0,0)node[ground]{};
+    \draw
+    (6*\smgrid,5*\smgrid) to[R,v<=$V_2$,l=$R_2$, i<=$I_2$](12*\smgrid,5*\smgrid) to[V,v>=$V_{s2}$,fill=green!50](12*\smgrid,0) -- (5*\smgrid,0);
+  \end{circuitikz}
+    % \includegraphics[width=0.6\textwidth]{figs/ipe/lab4/figure3-superP.eps}
+    \caption{Circuit used for verifying the superposition principle.}
+    \label{fig:figure3-SuperP}
+\end{figure}
+%
+Let us determine the responses $V_A$ and $I_A$ using the superposition principle, where the voltage $V_{s2}$ is initially zeroed. If  $I_{A,1}$ and $V_{A,1}$ denote the current through and the voltage across the resistor $R_3$ when $V_{s2}$ is zeroed, then the responses $I_{A,1}$ and $V_{A,1}$ are given by %
+%
+\begin{align*}
+  V_{A,1} = \left(\frac{R_2\|R_3}{R_1+R_2\|R_3}\right)V_{s1}~~\text{and}~~I_{A,1}= \frac{V_{A,1}}{R_3}.
+\end{align*}
+%
+Similarly, assume that $V_{s1}$ is zeroed. Therefore, the responses $I_{A,2}$ and $V_{A,2}$ are given by %
+%
+\begin{align*}
+  V_{A,2} = \left(\frac{R_1\|R_3}{R_2+R_1\|R_3}\right)V_{s2}~~\text{and}~~I_{A,2} = \frac{V_{A,2}}{R_3}.
+\end{align*}
+%
+According to superposition principle, the total responses are simply given by %
+%
+\begin{align*}
+\boxed{  I_A = I_{A,1} + I_{A,2}~~\text{and}~~V_A = V_{A,1} + V_{A,2}.}
+\end{align*}
+%
+
+
+\subsection{Part~4: Th\'evenin Equivalent Circuit}
+\label{sec:voltageDivider}
+This technique is used to replace a two-terminal circuit containing resistances and sources by  an equivalent circuit consisting of an independent voltage source in series with a resistance. The equivalent circuit is known as a Th\'evenin equivalent circuit (TEC). The open-circuit voltage across the two terminals of the original circuit is denoted by $V_{\mathrm{TH}}\equiv V_{\mathrm{oc}}$ (equivalent independent voltage source) and the equivalent Th\'evenin series resistance is denoted by $R_{\mathrm{TH}}.$ 
+
+Consider the DC circuits shown in Figures~\ref{fig:figure4-a}~and~\ref{fig:figure4-c}. We are interested in determining the current flowing through a load resistor $R_L$ connected across nodes A and B of each circuit shown in Figure~\ref{fig:figure4}. %
+%
+\begin{figure}
+    \centering
+    \subfigure[][]{
+      \label{fig:figure4-a}
+      \begin{circuitikz}[american]
+        \draw
+        (0,0) to[V=$V_s$,invert,fill=green!50](0,6*\smgrid) to[R,v>=$V_1$, l=$R_1$,i=$I_1$,-*](5*\smgrid,6*\smgrid) to[R,v>=$V_3$,l=$R_3$,i=$I_3$,-o](10*\smgrid,6*\smgrid)node[anchor=west]{A} to[R,v>=$V_{\mathrm{TH}}$,l=$R_L$,i=$I_L$,-o](10*\smgrid,0)node[anchor=west]{B} to[short,-*](0,0)node[ground]{};
+        \draw
+        (5*\smgrid,6*\smgrid) to[R,v>=$V_2$,l=$R_2$,i=$I_2$](5*\smgrid,0);
+      \end{circuitikz}      
+    % \includegraphics[width=0.47\textwidth]{figs/ipe/lab4/figure4-a}
+    }
+    \subfigure[][]{
+      \label{fig:figure4-c}
+      \begin{circuitikz}[american]
+         % \tikzstyle{every node}=[font=\tiny]        
+        \draw (0,0) to[V=$V_{s1}$,invert,fill=green!50](0,6*\smgrid)
+        to[R,v>=$V_1$,l=$R_1$,i=$I_1$,-*](6*\smgrid,6*\smgrid)
+        to[R,v>=$V_3$,l=$R_3$,i=$I_3$](6*\smgrid,0)
+        to[short,-*](0,0)node[ground]{}; \draw (6*\smgrid,6*\smgrid)
+        to[R,v<=$V_2$,l=$R_2$,i<=$I_2$](15.5*\smgrid,6*\smgrid)
+        to[V,v>=$V_{s2}$,fill=green!50](15.5*\smgrid,0) -- (6*\smgrid,0); \draw
+        (6*\smgrid,6*\smgrid)
+        to[short,-o](9.8*\smgrid,4.7*\smgrid)node[anchor=west]{A}
+        to[R,v>=$V_{\mathrm{TH}}$,l=$R_L$,i=$I_L$,-o](9.8*\smgrid,0.8*\smgrid)node[anchor=north]{B}
+        -- (6*\smgrid,0);
+      \end{circuitikz}      
+    % \includegraphics[width=0.48\textwidth]{figs/ipe/lab4/figure4-c}
+    }    
+    \caption{Circuits used for determining Th\'evenin equivalent circuits.}
+    \label{fig:figure4}
+\end{figure}
+%
+Note that $V_{\mathrm{TH}}$ and $R_{\mathrm{TH}}$ for the circuit shown in Figure~\ref{fig:figure4-a} are given by %
+%
+\begin{align*}
+  V_{\mathrm{TH}} = \left(\frac{R_2}{R_1+R_2}\right)V_s~\text{and}~~R_{\mathrm{TH}} = R_3+R_1\|R_2.
+\end{align*}
+%
+Similarly, the $V_{\mathrm{TH}}$ and $R_{\mathrm{TH}}$ for the circuit shown in Figure~\ref{fig:figure4-c} are given by %
+%
+\begin{align*}
+  V_{\mathrm{TH}} = \frac{G_1V_{s1} + G_2V_{s2}}{G_1+G_2+G_3} ~\text{and}~~R_{\mathrm{TH}} = R_1\|R_2\|R_3 = \frac{1}{G_1+G_2+G_3},
+\end{align*}
+%
+where $G_1,$ $G_2,$ and $G_3$ are the conductances of the resistors $R_1,$ $R_2,$ and $R_3,$ respectively.  
+% The corresponding TECs for the circuits shown in Figures~\ref{fig:figure4-a}~and~\ref{fig:figure4-c}  are shown in Figures~\ref{fig:figure5-abc-Th-b}~and~\ref{fig:figure5-abc-Th-c}, respectively. 
+% %
+% \begin{figure}[h]
+%     \centering
+%     % \subfigure[][]{
+%     % \label{fig:figure5-abc-Th-a}
+%     % \includegraphics[width=0.3\textwidth]{figs/ipe/lab4/figure5-abc-Th}
+%     % }
+%     \subfigure[][]{
+%     \label{fig:figure5-abc-Th-b}
+%     \includegraphics[width=0.3\textwidth]{figs/ipe/lab4/figure5-abc-Th}
+%     }
+%     \subfigure[][]{
+%     \label{fig:figure5-abc-Th-c}
+%     \includegraphics[width=0.3\textwidth]{figs/ipe/lab4/figure5-abc-Th}
+%     }    
+%     \caption{Corresponding TECs for the DC circuits shown in Figure~\ref{fig:figure4}.}
+%     \label{fig:figure5-abcTh}
+% \end{figure}
+% %
+
+
+\section{Prelab}
+\label{sec:prelab}
+
+The prelab is composed of two parts. In the first part, you are to analyze a DC circuit using node-voltage and mesh-current analysis techniques. In the second part, the superposition principle and the Th\'evenin equivalent circuit analysis technique will be utilized to analyze a DC circuit. 
+
+\begin{prelab}[Node-voltage and Mesh-current analysis]{prelab:NodeVoltageMeshCurrent}
+\begin{enumerate}
+    \item Given the circuit shown in Figure~\ref{fig:figure1-nodeV} with $V_{s1} = 10~[\volt],$  $V_{s2} = 5~[\volt],$ $R_1 = R_3=R_4=R_5= 100~[\ohm]$ and $R_2 = 50~[\ohm],$ compute the 
+     \begin{enumerate}
+         \item conductance matrix, ${\bf G},$
+         \item components of the current vector ${\bf I},$ and
+         \item node voltages $V_A$ and $\V_B.$
+     \end{enumerate}
+ \item Given the circuit shown in Figure~\ref{fig:figure2-meshC} with $V_{s1} = 10~[\volt],$  $V_{s2} = 5~[\volt],$  $R_1 = R_3=R_4=R_5= 100~[\ohm]$ and $R_2 = 50~[\ohm],$ calculate: 
+ \begin{enumerate}
+     \item the resistance matrix, ${\bf R},$
+     \item the mesh currents $I_1^{'},$ $I_2^{'},$ and $I_3^{'}.$
+ \end{enumerate}
+\end{enumerate}
+ 
+\end{prelab}
+
+% \begin{prelab}[Mesh-current analysis]{prelab:MeshCurrent}
+ 
+% \end{prelab}
+
+\begin{prelab}[Superposition principle and Th\'evenin equivalent circuit analysis]{prelab:SuperpositionPrincipleThevenin}
+\begin{enumerate}
+    \item Given the circuit shown in Figure~\ref{fig:figure3-SuperP} with $V_{s1} = 10~[\volt],$  $V_{s2} = 5~[\volt],$  and $R_1 = R_2=R_3=100~[\ohm].$ Compute 
+     \begin{enumerate}
+         \item $V_{A,1},$ $V_{A,2},$ $I_{A,1},$ $I_{A,2},$ and 
+         \item $I_A$ and $V_A.$
+     \end{enumerate}
+    \item 
+    \begin{enumerate}
+        \item Given the circuit shown in Figure~\ref{fig:figure4-a} with $V_s = 5~[\volt],$ $R_1 = 4.7~[\kilo\ohm],$ $R_2=10~[\kilo\ohm],$ $R_3 = 3.3~[\kilo\ohm],$ and $R_L = 10~[\kilo\ohm].$ You are to compute the current through and the voltage across the load resistor $R_L$ using the Th\'evenin equivalent circuit analysis technique.   
+         \begin{enumerate}
+             \item Determine the Th\'evenin equivalent voltage $V_{\mathrm{TH}}$ and resistance $R_{\mathrm{TH}}.$
+             \item Draw the Th\'evenin equivalent circuit diagram
+             \item Compute the current through and the voltage across the load resistor $R_L.$
+         \end{enumerate}
+     
+     \item Given the circuit shown in Figure~\ref{fig:figure4-c} with $V_{s1} = 5~[\volt],$ $V_{s2} = -5~[\volt],$ $R_1 = 3.3~[\kilo\ohm],$ $R_2=5.6~[\kilo\ohm],$ and $R_3 = 10~[\kilo\ohm].$   
+         \begin{enumerate}
+             \item Determine the Th\'evenin equivalent voltage $V_{\mathrm{TH}}$ and resistance $R_{\mathrm{TH}}.$ % Answer: V_TH = 1.072 [V], R_TH = 172.0 [Ohm]
+             \item Draw the Th\'evenin equivalent circuit diagram.
+               
+             \item Assume that the load resistor $R_L = 10~[\kilo\ohm]$ is connected across nodes A and B of the circuit shown in Figure~\ref{fig:figure4-c}. Compute the current through and voltage across  the load resistor $R_L.$ 
+         \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+ 
+\end{prelab}
+
+% \begin{prelab}[Th\'evenin equivalent circuit]{prelab:Thevenin}
+
+ 
+% \end{prelab}
+
+
+\section{Laboratory Work}
+\subsection{Part~1 and Part~2}
+\label{sec:part1}
+\begin{enumerate}
+\item Measure the resistances of the resistors used to construct the circuit shown in Figure~\ref{fig:figure1-nodeV} (see prelab for resistance values) and complete the following table.
+
+\begin{center}
+\begin{tabular}{c|c|c}
+    \toprule
+    Resistor &  Ideal (color-coded) & Measured\\
+    \toprule
+    $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+    $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+    $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 = 
+    $R_4$ & $\ldots$ & $\ldots$\\   %|| R_4 = 
+    $R_5$ & $\ldots$ & $\ldots$\\   %|| R_5 =     
+    \bottomrule
+  \end{tabular}    
+\end{center}
+
+
+
+\item Construct the circuit shown in Figure~\ref{fig:figure1-nodeV} using two voltage sources with $V_{s1} = 10~[\volt]$ and $V_{s2} = 5~[\volt].$ 
+% Note in the lab, we do not have 50 ohm resistor, therefore use 47~ohm resistor. 
+\item Measure all voltages and currents in the circuit using DMM. Record all your calculations and  measurements in the following table:
+
+  \begin{center}
+  \begin{tabular}{c|c|c}
+    \toprule
+    Voltage/current & Computed & Measured\\
+    \toprule
+    $V_1$ & $\ldots$ & $\ldots$\\
+    $V_2$ & $\ldots$ & $\ldots$\\
+    $V_3$ & $\ldots$ & $\ldots$\\
+    $V_4$ & $\ldots$ & $\ldots$\\
+    $V_5$ & $\ldots$ & $\ldots$\\
+    $I_1$ & $\ldots$ & $\ldots$\\
+    $I_2$ & $\ldots$ & $\ldots$\\
+    $I_3$ & $\ldots$ & $\ldots$\\
+    $I_4$ & $\ldots$ & $\ldots$\\
+    $I_5$ & $\ldots$ & $\ldots$\\    
+    \bottomrule
+  \end{tabular}     
+  \end{center}
+  
+where $V_i$ is the voltage across and $I_i$ is the current flowing through  the resistor $R_i,$ for $i=1,2,\ldots, 5.$
+  
+\item Measure the node voltages, $V_A$ and $V_B,$ and compare with the values determined by Equation~\eqref{eq:nodeVoltageSolution}.
+\item Verify that the KCL equations~\eqref{eq:KCL-NodeA}~and~\eqref{eq:KCL-NodeB} at nodes A and B are satisfied.
+
+\item Verify that the KVL equations~\eqref{eq:KVL-MeshCurrent} around all meshes in the circuit are satisfied.
+  
+\item Comment on any discrepancy found between the computed and the experimental (measured) values of the voltages and currents. 
+  
+\end{enumerate}
+
+
+
+
+
+
+\subsection{Part~3}
+\label{sec:part3}
+
+
+\begin{enumerate}
+
+\item Measure the resistances of the resistors used to construct the circuit shown in Figure~\ref{fig:figure3-SuperP} (see prelab for resistance values) and complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Resistor &  Ideal (color-coded) & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+      $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+      $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+
+  \item Construct the circuit shown in Figure~\ref{fig:figure3-SuperP} using two power supplies with $V_{s1} = 10~[\volt]$ and $V_{s2}=5~[\volt].$
+
+
+\item Remove the voltage source $V_{s2}$ and place a wire (short) between two the terminals where the source $V_{s2}$ was connected.  Record the computed value of the total resistance $R_T$ seen by the source $V_{s1}.$ Then, temporarily remove the source $V_{s1}$ and measure the total resistance of the circuit. 
+
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \toprule
+      Quantity & Computed & Measured\\
+      \toprule
+      $R_T$ ($V_{s1}$ operating alone) & & \\
+      \bottomrule
+    \end{tabular}      
+  \end{center}
+
+
+\item Using the measured values of resistances, compute and measure the current $I_{A,1}$ flowing through and the voltage $V_{A,1}$ across the resistance $R_3.$
+
+
+  \begin{center}
+    %
+   \begin{tabular}{|c|c|c|}
+    \toprule
+    Quantity & Computed & Measured\\
+    \toprule
+     $I_{A,1}$ ($V_{s1}$ operating alone) & & \\
+     \hline
+    $V_{A,1}$ ($V_{s1}$ operating alone) & & \\     
+    \bottomrule
+   \end{tabular}
+%       
+  \end{center}
+
+
+   
+\item Remove the voltage source $V_{s1},$ and  instead, place a wire (short) between the two terminals where the source $V_{s1}$ was connected. Record the computed value of the total resistance $R_T$ seen by the source $V_{s2}.$ Then, temporarily remove the source $V_{s2}$ and measure the total resistance of the circuit. 
+
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \toprule
+      Quantity & Computed & Measured\\
+      \toprule
+      $R_T$ ($V_{s2}$ operating alone) & & \\
+      \bottomrule
+    \end{tabular}     
+  \end{center}
+
+
+\item Using the measured values of resistances, compute and measure the current $I_{A,2}$ flowing through and the voltage $V_{A,2}$ across the resistance $R_3.$
+
+  
+  %
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \toprule
+      Quantity & Computed & Measured\\
+      \toprule
+      $I_{A,2}$ ($V_{s2}$ operating alone) & & \\
+      \hline
+    $V_{A,2}$ ($V_{s2}$ operating alone) & & \\      
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+   %
+
+   
+\item Compute the algebraic sum of currents $I_{A,1}$ and $I_{A,2}$ and the voltages  $V_{A,1}$ and $V_{A,2}$  to find the total current $I_A$ flowing through and the total voltage $V_A$ across the resistor $R_3.$ Also, use the \emph{ammeter} to measure the total current $I_A$ and the voltmeter to measure the total voltage $V_A$ of the original circuit having two voltage sources operating simultaneously. Record all computed and measured data in the table below and verify the superposition theorem in computing the total current $I_A$ and the total voltage $V_A.$ 
+
+   \begin{center}
+     \begin{tabular}{|c|c|c|}
+       \toprule
+       Quantity & Computed & Measured\\
+       \toprule
+       $I_A$ & & \\
+       \hline
+       $V_A$ & & \\       
+       \bottomrule
+     \end{tabular}     
+   \end{center}
+   % 
+
+   %
+   
+   
+\end{enumerate}
+
+\subsection{Part~4}
+\label{sec:part4}
+
+\begin{enumerate}
+\item     
+
+\begin{enumerate}
+\item Measure the resistances of the resistors used to construct the circuit shown in Figure~\ref{fig:figure4-a} (see prelab for resistance values) and complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Resistor &  Ideal (color-coded) & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+      $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+      $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 = 
+      $R_L$ & $\ldots$ & $\ldots$\\   %|| R_L =     
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+  
+\item Construct the circuit shown in Figure~\ref{fig:figure4-a} with $V_s = 5~[\volt].$
+
+  
+\item Remove the load resistor $R_L$ from the  circuit shown in Figure~\ref{fig:figure4-a} and compute the Th\'{e}venin equivalent voltage $V_{\mathrm{TH}}=V_{\mathrm{oc}}$ using the measured values of the resistances.  Also, measure the TEC voltage $V_{\mathrm{TH}}$ using a voltmeter across the terminals A and B. Record all data in the table below. %
+
+    
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \toprule
+      Quantity & Computed & Measured\\
+      \toprule
+      $V_{\mathrm{TH}}$ & & \\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Assume that the voltage source is replaced with a wire. Compute the Th\'{e}venin equivalent resistance $R_{\mathrm{TH}}$ using the measured values of the resistances.  Also, measure the TEC resistance $R_{\mathrm{TH}}$ using a ohmmeter across the terminals A and B. Record all data in the table below. %
+    
+   \begin{center}
+     \begin{tabular}{|c|c|c|}
+       \toprule
+       Quantity & Computed & Measured\\
+       \toprule
+       $R_{\mathrm{TH}}$ & & \\
+       \bottomrule
+     \end{tabular}     
+   \end{center}
+
+
+
+   
+ \item Draw and construct the Th\`{e}venin equivalent circuit.
+
+
+ \item Place the load resistor $R_L=10~[\kilo\ohm]$ between the terminals A and B of the circuit shown in Figure~\ref{fig:figure4-a}. Measure the voltage, $V_L,$ across the load resistor $R_L$ using
+   \begin{enumerate}
+   \item the original circuit (without using the Th\'evenin equivalent circuit) and 
+     
+   \item the Th\`{e}venin equivalent circuit. 
+   \end{enumerate}
+   %
+   \begin{center}
+     \begin{tabular}{|c|c|c|}
+       \toprule
+       Quantity & Original circuit & Th\`{e}venin\\
+       \toprule
+       $V_L$ (measured) & & \\
+       \bottomrule
+     \end{tabular}     
+   \end{center}
+
+   %   
+
+ \end{enumerate}
+ 
+ \item 
+ \begin{enumerate}
+\item Measure the resistances of the resistors used to construct the circuit shown in Figure~\ref{fig:figure4-c} (see prelab for resistance values) and complete the following table.
+
+  \begin{center}
+    \begin{tabular}{c|c|c}
+      \toprule
+      Resistor &  Ideal (color-coded) & Measured\\
+      \toprule
+      $R_1$ & $\ldots$ & $\ldots$\\   %|| R_1 = 
+      $R_2$ & $\ldots$ & $\ldots$\\   %|| R_2 = 
+      $R_3$ & $\ldots$ & $\ldots$\\   %|| R_3 = 
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+
+  
+\item Construct the circuit shown in Figure~\ref{fig:figure4-c} with $V_{s1} = 5~[\volt]$ and $V_{s2} = -5~[\volt].$
+
+  
+\item Remove the load resistor $R_L$ from the  circuit shown in Figure~\ref{fig:figure4-c} and compute the Th\'{e}venin equivalent voltage $V_{\mathrm{TH}}=V_{\mathrm{oc}}$ using the measured values of the resistances.  Also, measure the TEC voltage $V_{\mathrm{TH}}$ using a voltmeter across the terminals A and B. Record all data in the table below. %
+
+    
+  \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \toprule
+      Quantity & Computed & Measured\\
+      \toprule
+      $V_{\mathrm{TH}}$ & & \\
+      \bottomrule
+    \end{tabular}    
+  \end{center}
+  
+\item Assume that the voltage source is replaced with an wire. Compute the Th\'{e}venin equivalent resistance $R_{\mathrm{TH}}$ using the measured values of the resistances.  Also, measure the TEC resistance $R_{\mathrm{TH}}$ across the terminals A and B using an ohmmeter. Record all data in the table below. %
+    
+   \begin{center}
+     \begin{tabular}{|c|c|c|}
+       \toprule
+       Quantity & Computed & Measured\\
+       \toprule
+       $R_{\mathrm{TH}}$ & & \\
+       \bottomrule
+     \end{tabular}     
+   \end{center}
+
+
+
+   
+ \item Draw and construct the Th\`{e}venin equivalent circuit.
+
+
+ \item Place the load resistor $R_L=10~[\kilo\ohm]$ between the terminals A and B of the circuit shown in Figure~\ref{fig:figure4-c}. Measure the voltage, $V_L,$ across the load resistor $R_L$ using
+   \begin{enumerate}
+   \item the original circuit (without using the Th\'evenin equivalent circuit) and 
+     
+   \item the Th\`{e}venin equivalent circuit. 
+   \end{enumerate}
+   %
+   \begin{center}
+     \begin{tabular}{|c|c|c|}
+       \toprule
+       Quantity & Original circuit & Th\`{e}venin\\
+       \toprule
+       $V_L$ (measured) & & \\
+       \bottomrule
+     \end{tabular}     
+   \end{center}
+
+
+ \end{enumerate}
+\end{enumerate}
+ 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../labBookMechatronics-V2"
+%%% End:

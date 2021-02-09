@@ -1,0 +1,48 @@
+
+In this chapter, a set of C programming examples for the  embedded computer, BBBlue,  will be presented.  
+
+\section{Flashing Red Light}
+\label{sec:appFlashingRedLight}
+  Suppose that the LED, RC\_LED\_RED, of the BBBlue board is used  to mimic a flashing Red light at an intersection of roads. You are to write a C program in a BBBlue board so that it practically flashes the LED at the frequency of $0.5~[\hertz].$ When the PAU button is pressed, the LED stops flashing (LED is OFF) and your program terminates. A sample program in C that implements this task on a BBBlue board is given below. 
+
+  \begin{mdframed}[backgroundcolor=yellow!5,roundcorner=7pt,outerlinecolor=blue!70!black,outerlinewidth=1.2,frametitle=A sample program that implements the task of flashing red light.]
+
+    \inputminted[breaklines,linenos]{C}{latex/programmingC/embeddedComputerProgramming/flashingRedLight.c}
+
+  \end{mdframed}
+
+\section{Tesing ADC using Robot Control Library}
+\label{sec:appRC-TestADC}
+
+Suppose that analog voltages in the range from $0$~[\volt] to $1.8$~[\volt] are applied to the inputs of four ADC channels of the BBBlue embedded computer. The 6-pin JST-SH connector is used to pass anlog signals to the four input channels of the ADC. An example program that prints voltages fed to ADC channels is given below. Note that this program also reads the votlage of the DC power jack and the battery voltage that is used to build a wheeled mobile robot. 
+
+
+  \begin{mdframed}[backgroundcolor=yellow!5,roundcorner=7pt,outerlinecolor=blue!70!black,outerlinewidth=1.2,frametitle=A sample program that prints voltages read by all ADC channels.]
+
+    \inputminted[breaklines,linenos]{C}{../librobotcontrol-master/examples/src/rc_test_adc.c}
+
+  \end{mdframed}
+
+
+\section{DC Motor Operation}
+\label{sec:appDC-MotorOperation}
+In this section, two example programs are provided to show how robot control library fucntions are used to operate DC motors. The first program shows how to use H-bridge driver embedded in the BBBlue computer to drive four DC motors simultaneously. The second program measures the  quadrature encoder position.
+
+
+\begin{mdframed}[backgroundcolor=yellow!5,roundcorner=7pt,outerlinecolor=blue!70!black,outerlinewidth=1.2,frametitle=A sample program that drives four DC motors using PWM signal.]
+
+    \inputminted[breaklines,linenos]{C}{../librobotcontrol-master/examples/src/rc_test_motors.c}
+
+  \end{mdframed}
+
+\begin{mdframed}[backgroundcolor=yellow!5,roundcorner=7pt,outerlinecolor=blue!70!black,outerlinewidth=1.2,frametitle=A sample program that reads quadrature encoder values to measure position of rotary encoder.]
+    \inputminted[breaklines,linenos]{C}{../librobotcontrol-master/examples/src/rc_test_encoders.c}
+
+  \end{mdframed}
+  
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../labHandoutMechatronics-V2"
+%%% End:
