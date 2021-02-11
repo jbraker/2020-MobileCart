@@ -274,24 +274,24 @@ below.
          \end{verbatim}
          into the PuTTY interface. This will display the network configuration as shown in~\autoref{fig:ifconfig_1}. 
          
-\begin{figure}
-    \centering
-    \includegraphics[width= 0.4\textwidth]{figs/img/Lab0/ifconfig_1.JPG}
-    \caption{Displaying network status using \emph{ifconfig} command.}
-    \label{fig:ifconfig_1}
-\end{figure} 
+    \begin{figure}
+        \centering
+        \includegraphics[width= 0.4\textwidth]{figs/img/Lab0/ifconfig_1.JPG}
+        \caption{Displaying network status using \emph{ifconfig} command.}
+        \label{fig:ifconfig_1}
+    \end{figure} 
 
-\item As it can be seen from \autoref{fig:ifconfig_1}, in option \emph{wlan0:},
-  \emph{RX packets 0 bytes 0 and TX packets 0 bytes 0.} This shows that there is
-  no internet connection.
+    \item As it can be seen from \autoref{fig:ifconfig_1}, in option \emph{wlan0:},
+    \emph{RX packets 0 bytes 0 and TX packets 0 bytes 0.} This shows that there is
+    no internet connection.
 
-  
-\item The BBBlue will be connected to the internet using the application called
-  ``connmanctl''. Therefore, key in the command
-        \begin{verbatim}
-            connmanctl
-        \end{verbatim}
-    to enter into the \emph{connmanctl} application.
+    
+    \item The BBBlue will be connected to the internet using the application called
+    ``connmanctl''. Therefore, key in the command
+            \begin{verbatim}
+                connmanctl
+            \end{verbatim}
+        to enter into the \emph{connmanctl} application.
     
     \item After entering the Connmanctl application, key in
         \begin{verbatim}
@@ -303,12 +303,12 @@ below.
     \begin{verbatim}
         scan wifi
     \end{verbatim}
-    The resulting command will display if the scan was completed or not.
+    The resulting output will display whether or not the scan was completed.
     \item Continue by keying in
     \begin{verbatim}
         services
     \end{verbatim}
-    to displayed all scanned wireless networks.
+    to display all scanned wireless networks.
     \item Next register all wireless networks by keying in
     \begin{verbatim}
         agent on
@@ -330,7 +330,7 @@ below.
     to leave the Connmanctl application. Refer to \autoref{fig:connmanctl} for an example of connecting to the internet.
     \begin{figure}[H]
         \centering
-        \includegraphics[width= 0.4\textwidth]{figs/img/Lab0/connmanctl.JPG}
+        \includegraphics[width= 0.6\textwidth]{figs/img/Lab0/connmanctl.JPG}
         \caption{Connecting BBBlue to the  internet using passkey.}
         \label{fig:connmanctl}
     \end{figure}    
@@ -351,6 +351,55 @@ wifi network dedicated for the office. For BBBlue to connect to such a wifi
 network to connect to the internet, follow the steps below.
 
 \todo[inline]{Jason: write the steps below}
+
+\begin{enumerate}[a)]
+    \item Begin by typing 
+         \begin{verbatim}
+            ifconfig
+         \end{verbatim}
+         into the PuTTY interface. This will display the network configuration as shown in~\autoref{fig:ifconfig_1}.
+
+\item As it can be seen from \autoref{fig:ifconfig_1}, in option \emph{wlan0:},
+  \emph{RX packets 0 bytes 0 and TX packets 0 bytes 0.} This shows that there is
+  no internet connection.
+
+  
+\item The application called ``connmanctl'' will be used to determine the name and SSID of the enterprise network. Therefore, key in the command
+        \begin{verbatim}
+            connmanctl
+        \end{verbatim}
+    to enter into the \emph{connmanctl} application.
+    
+    \item After entering the Connmanctl application, key in
+        \begin{verbatim}
+            enable wifi
+        \end{verbatim}
+    to ensure wireless capabilities are enabled on the BeagleBone.
+    
+    \item Next scan for possible wireless network connections by keying in
+    \begin{verbatim}
+        scan wifi
+    \end{verbatim}
+    The resulting output will display whether or not the scan was completed.
+    \item Continue by keying in
+    \begin{verbatim}
+        services
+    \end{verbatim}
+    to display all scanned wireless networks as shown in \autoref{fig:wifi_services}.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width= 0.6\textwidth]{figs/img/Lab0/wifi_services.png}
+        \caption{Listing available networks using \emph{services} command.}
+        \label{fig:wifi_services}
+    \end{figure}
+
+    \item Key in the command
+    \begin{verbatim}
+        quit
+    \end{verbatim}
+    to leave the Connmanctl application
+\end{enumerate}
 
 %\begin{figure}[H]
  %   \centering
