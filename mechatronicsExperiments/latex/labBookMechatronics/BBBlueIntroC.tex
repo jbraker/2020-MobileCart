@@ -239,6 +239,35 @@ If there are issues browsing  ``http://192.168.7.2'', refer to Troubleshooting P
 % http://beagleboard.org/getting-started#update
 %===========================================================================================================
 
+\subsection{File Transfer to BBBlue using WinSCP} \label{FileTransferWinSCP}
+Files can be created and edited on the BBBlue through the terminal. However, sometimes it is more convenient to write a file on a laptop computer and then transfer the file to the BBBlue. This can be done using WinSCP client software that is installed in the laptop. To do that, follow the steps below. 
+%
+\begin{enumerate}
+    \item Open WinSCP
+    
+    \item  To upload the file open WinSCP, enter hostname as ``192.168.7.2", port as ``22", username ``debian" and use the standard password ``temppwd" as shown in Figure~\ref{fig:winSCPlogin}. %
+    %
+    \begin{figure}
+        \centering
+        \includegraphics[width= 0.55\textwidth]{figs/img/Lab0/winSCP_login.png}
+        \caption{Login BBBlue using WinSCP.}
+        \label{fig:winSCPlogin}
+    \end{figure}
+    %
+    
+    \item You will now be presented with a double-pane window as shown in Figure~\ref{fig:winApp}. The left pane shows the content of the local directory and the right pan shows the content of the remote (in this case, BBBlue) directory. %
+    \begin{figure}
+        \centering
+        % \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP.png}
+        \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP-C.PNG}        
+        \caption{Transferring files using WinSCP application.}
+        \label{fig:winApp}
+    \end{figure}
+    
+    \item Select the program file \emph{exampleProgram.c} on the left pane (which is locally stored in your laptop), and then simply drag and drop in the remote directory (here, \emph{newProjectName/}) of the BBBlue as shown in the right pane of Figure~\ref{fig:winApp}. The file is now transferred to the BBBlue.%
+
+    
+\end{enumerate}
 
 \subsection{Internet Connection}
 Given that the driver software for BBBlue is installed properly in the computer
@@ -347,10 +376,8 @@ You should receive a positive response from the web URL server. Now that you are
 
 In an office environment, such as university or enterprise, it is required to
 use ``username'' followed by a password to connect to the internet through the
-wifi network dedicated for the office. For BBBlue to connect to such a wifi
-network to connect to the internet, follow the steps below.
-
-\todo[inline]{Jason: write the steps below}
+wifi network dedicated for the office. To connect the BBBlue to such a wifi
+network, follow the steps below.
 
 \begin{enumerate}[a)]
     \item Begin by typing 
@@ -385,7 +412,7 @@ network to connect to the internet, follow the steps below.
     \begin{verbatim}
         services
     \end{verbatim}
-    to display all scanned wireless networks as shown in \autoref{fig:wifi_services}.
+    to display all scanned wireless networks as shown in \autoref{fig:wifi_services}. Note that the network BUsecure has a network ID that ends with ``ieee8021x.'' This indicates that the network uses Network Access Control instead of just a passkey.
 
     \begin{figure}
         \centering
@@ -398,7 +425,28 @@ network to connect to the internet, follow the steps below.
     \begin{verbatim}
         quit
     \end{verbatim}
-    to leave the Connmanctl application
+    to leave the Connmanctl application.
+
+    \item To connect the BBBlue to the enterprise network, a new file must be created in the \emph{/var/lib/connman} directory. This file can be created using a text editor such as Nano on the BBBlue, or it can be created on the laptop computer and transferred using WinSCP (see \ref{FileTransferWinSCP}). The filename should be the ID of the network with an extension of ``.config'' (\emph{wifi\_e0e5cf8b02c6\_4255736563757265\_managed\_ieee8021x.config}, for example). The file contents should be as follows:
+    \begin{verbatim}
+        [service_wifi_e0e5cf8b02c6_4255736563757265_managed_ieee8021x]
+        Type = wifi
+        SSID = 4255736563757265
+        EAP = peap
+        Phase2 = MSCHAPV2
+        Identity= USERNAME
+        Passphrase= PASSWORD
+    \end{verbatim}
+
+    The SSID of the network is the string of numbers right before the ``\_managed\_ieee8021x'' suffix. Replace ``USERNAME'' and ``PASSWORD'' with your username and password.
+
+    \item Once this file is created and located in the \emph{/var/lib/connman} directory, the BBBlue will automatically connect to the network. The green WIFI light on the BBBlue will be turned on.
+    
+    \item You can now test the internet connection using a simple ping test to a web URL such as google.com:
+    \begin{verbatim}
+        ping www.google.com
+    \end{verbatim}
+    You should receive a positive response from the web URL server. Now that you are connected to the internet you can run updates and install any software as required.
 \end{enumerate}
 
 %\begin{figure}[H]
@@ -582,39 +630,6 @@ Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} li
     \end{verbatim}
 
 \end{enumerate}
-
-
-
-\subsection{Transfer Files to BBBlue using WinSCP}
-C programs (file names should have ``.c'' extensions) can be also be written locally in the laptop computer and then transferred to the \emph{newProjectName} folder of the BBBlue using WinSCP client software that is installed in the laptop. For that, follow the steps below. 
-%
-\begin{enumerate}
-    \item Open WinSCP
-    
-    \item  To upload the file open WinSCP, enter hostname as ``192.168.7.2", port as ``22", username ``debian" and use the standard password ``temppwd" as shown in Figure~\ref{fig:winSCPlogin}. %
-    %
-    \begin{figure}
-        \centering
-        \includegraphics[width= 0.55\textwidth]{figs/img/Lab0/winSCP_login.png}
-        \caption{Login BBBlue using WinSCP.}
-        \label{fig:winSCPlogin}
-    \end{figure}
-    %
-    
-    \item You will now be presented with a double-pane window as shown in Figure~\ref{fig:winApp}. The left pane shows the content of the local directory and the right pan shows the content of the remote (in this case, BBBlue) directory. %
-    \begin{figure}
-        \centering
-        % \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP.png}
-        \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP-C.PNG}        
-        \caption{Transferring files using WinSCP application.}
-        \label{fig:winApp}
-    \end{figure}
-    
-    \item Select the program file \emph{exampleProgram.c} on the left pane (which locally stored in your laptop), and then simply drag and drop in the remote directory (here, \emph{newProjectName/}) of the BBBlue as shown in the right pane of Figure~\ref{fig:winApp}. %
-
-    
-\end{enumerate}
-
 
 \section{Troubleshooting}
 \label{sec:troubleshooting}
