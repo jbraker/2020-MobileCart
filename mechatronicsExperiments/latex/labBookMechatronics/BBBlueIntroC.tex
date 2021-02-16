@@ -576,7 +576,7 @@ Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} li
         sudo dpkg-reconfigure librobotcontrol
         sudo apt update  && sudo apt upgrade librobotcontrol
     \end{verbatim}
-    While these commands are executed, you may see the option which program to run automatically on boot. You may want to choose \ul{\emph{rc\_blink}} and then hit \emph{Enter} key. 
+    While these commands are executed, you may see the option which program to run automatically on boot. You may want to choose \underline{\emph{rc\_blink}} and then hit \emph{Enter} key. 
     \item Check that the librobotcontrol package is working properly by running the command: %
 %    
     \begin{verbatim}
@@ -616,7 +616,7 @@ Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} li
     \begin{verbatim}
         nano Makefile
     \end{verbatim}
-    \item Replace the line \emph{TARGET = rc\_project\_template} with \ul{\emph{TARGET = newProjectName}}
+    \item Replace the line \emph{TARGET = rc\_project\_template} with \underline{\emph{TARGET = newProjectName}}
     
     \item Compile the program using the command
     \begin{verbatim}
@@ -660,7 +660,7 @@ This section presents a partial list of issues that might appear while configuri
     \textbf{Solution:}  Re-flashing the SD card should resolve any abnormality.
 
     
-  \item There may be some issues for not turning off the BBBlue properly. Therefore, use the following command to safely shutdown the Beaglebone when you are done working with it.
+  \item There may be some issues caused by not turning off the BBBlue properly. Therefore, use the following command to safely shutdown the Beaglebone when you are done working with it.
 
 \begin{verbatim}
 sudo shutdown now
