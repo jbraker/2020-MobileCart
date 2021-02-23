@@ -1,30 +1,35 @@
 
-The purpose of this laboratory work is to set up computational and experimental platforms using a single-board computer\footnote{The author would like to thank students (especially Eric Jones and Dakota Adra) of robotics and mechatronics group of ECE department for testing some laboratory experiments.}. There are several single-board computers available in the market. Here, a linux-enabled robotics computer will be utilized for conducting a set of laboratory experiments.
+The purpose of this laboratory experiment is to set up computational and experimental
+platforms using an embedded (single-board) computer. There are
+several single-board computers available in the market. Here, a linux-enabled
+robotics computer, BeagleBone Blue (abbreviated as ``BBBlue''), will be utilized for conducting a set of laboratory
+experiments that follows.
 
 \section{Parts}
 \label{sec:partsNeeded}
 The following parts are required to conduct this laboratory experiment. %
 %
 \begin{enumerate}
-% \item Breadboard,
-\item BeagleBone Blue (BBBlue) single-board computer\footnote{\href{https://www.renaissancerobotics.com/BeagleboneBlue.html}{https://www.renaissancerobotics.com/BeagleboneBlue.html}}
+\item BeagleBone Blue (BBBlue) embedded computer\footnote{\href{https://www.renaissancerobotics.com/BeagleboneBlue.html}{https://www.renaissancerobotics.com/BeagleboneBlue.html}}
 \item 8/16/32 GB micro SD card
 \item Micro-USB cable 
-\item Laptop/desktop computer 
+\item Laptop/desktop computer running Windows 10 operating system. 
 \end{enumerate}
 
 
 \section{Hardware and Software}
-A laptop computer (or desktop) with Windows 10 operating system installed is needed. In addition, a  BeagleBone Blue (BBBlue), which is a low-power open-source single-board, linux-enabled robotics computer is required. Figure~\ref{fig:BBBlue} depicts a BBBlue single-board computer showing its different  (external) hardware  interfacing slots and general purpose input/output (GPIO)  pins\footnote{\href{http://beagleboard.org/blue}{http://beagleboard.org/blue}}. %
+A laptop computer (or desktop) with Windows 10 operating system installed is needed. In addition, a  BeagleBone Blue (BBBlue), which is a low-power open-source single-board, linux-enabled robotics computer is required. Figure~\ref{fig:BBBlue} depicts a BBBlue embedded computer showing its different  (external) hardware  interfacing slots and general purpose input/output (GPIO)  pins\footnote{\href{http://beagleboard.org/blue}{http://beagleboard.org/blue}}. %
 %
 \begin{figure}
     \centering
     \includegraphics[width= 0.5\textwidth]{figs/img/Lab0/BeagleBone_Blue_balloons.png}
-    \caption[BeagleBone Blue single-board computer.]{BeagleBone Blue single-board computer.}
+    \caption[BeagleBone Blue single-board computer.]{BeagleBone Blue embedded computer.}
     \label{fig:BBBlue}
 \end{figure}
 %
-The BBBlue is to  be connected to a laptop computer running Windows 10 operating system using a micro-USB cable. The client software that need to be installed in the laptop are:  
+The BBBlue is to be connected to a laptop computer running Windows 10 operating
+system using a micro-USB cable. The client software that need to be installed in
+the laptop running Windows 10 operating system are:
 \begin{enumerate}[a)]
     \item PuTTY,
     \item WinSCP, and 
@@ -35,10 +40,20 @@ These software are required to communicate with the BBBlue and to execute/access
 
 \subsection{PuTTY}
 \label{sec:putty}
-PuTTY is an open-source client software that will be used to remotely communicate with a BBBlue from a local computer (laptop, for instance).  \hl{It is a terminal emulator, serial console and network file transfer application.}  PuTTY's Secure Shell (SSH) protocol is used to communicate between the Linux Shell (or console) in the local computer and the BBBlue. 
+PuTTY is an open-source client software that will be used to remotely
+communicate with a BBBlue from a local computer (laptop, for instance). \hl{It
+  is a terminal emulator, serial console and network file transfer application.}
+PuTTY's Secure Shell (SSH) protocol is used to communicate between the Linux
+Shell (or console) in the local computer and the BBBlue.
 
-\begin{mdframed}[frametitle=Download and installation, backgroundcolor=yellow!5, roundcorner=7pt,outerlinecolor= blue!70!black,outerlinewidth=1.2]
-  ``PuTTY" can be downloaded from \url{https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html} by clicking \emph{putty.exe}  (64-bit version) under the section labelled ``Alternative binary files." Save this file to your desktop.  Double click \emph{putty.exe} and follow the on-screen instructions to install it. 
+\begin{mdframed}[frametitle=Download and installation, backgroundcolor=yellow!5,
+  roundcorner=7pt,outerlinecolor= blue!70!black,outerlinewidth=1.2]
+  ``PuTTY" can be downloaded from internet\footnote{One possible link to
+    download PuTTY is
+    \url{https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html}. Simply
+    click \emph{putty.exe}  (64-bit version) under the section labelled
+    ``Alternative binary files." Save this file to your desktop.} Download the
+  binary file ``putty.exe'', double click it and then follow the on-screen instructions to install. 
 \end{mdframed}
 
 
@@ -47,23 +62,36 @@ PuTTY is an open-source client software that will be used to remotely communicat
 Similar to PuTTY, WinSCP (Windows Secure CoPy) is also a free and open-source  client software (for Microsoft Windows only) that is used to remotely communicate with the BBBlue from a laptop computer. The main function of WinSCP is the secure file transfer between a local (in this case, the laptop) and a remote (the BBBlue, for instance) computer.  In this laboratory work, WinSCP is used only to transfer files from a local computer directly into the remote directories on the BBBlue. %
 
 \begin{mdframed}[frametitle=Download and installation, backgroundcolor=yellow!5, roundcorner=7pt,outerlinecolor= blue!70!black,outerlinewidth=1.2]
-  To download WinSCP browse to ``WinSCP", go to \url{https://winscp.net/eng/download.php} and click on ``WinSCP::Official Site::Download". Then, download the most recent installation package (for example, \emph{WinSCP-5.11.3-setup.exe}, when this laboratory document was written) and save this file to your desktop. Double-click on the executable file \emph{WinSCP-5.11.3-setup.exe} and follow the on-screen instructions to install it. In the installation process, select \emph{Typical Installation} then select the \emph{Commander Style}.
+  One possible link to download ``WinSCP'' is
+  \url{https://winscp.net/eng/download.php}. Browse this website and click on
+  ``WinSCP::Official Site::Download". Then, download the most recent
+  installation package (for example, \emph{WinSCP-5.11.3-setup.exe}, when this
+  book was written) and save this file to your desktop. Double-click on the executable file \emph{WinSCP-5.11.3-setup.exe} and follow the on-screen instructions to install it. In the installation process, select \emph{Typical Installation} then select the \emph{Commander Style}.
 \end{mdframed}
 
 \subsection{Etcher}
 \label{sec:etcher}
 
-Etcher\footnote{\href{https://etcher.io/}{https://etcher.io/}}  is  a powerful \emph{DiskImager} software that is used to flash an operating system (OS) image on to an SD card or an USB drive. It is important that this software is used to flash an OS image on to the  SD card mounted on a BBBlue. Etcher ensures that every-bite of data is written correctly and prevents  from accidentally writing files to local hard-drives. 
+Etcher\footnote{\href{https://etcher.io/}{https://etcher.io/}} is a powerful
+\emph{DiskImager} software that is used to flash an operating system (OS) image
+on to an SD card or an USB drive. It is important that this software is used to
+flash an OS image on to the SD card mounted on a BBBlue. Etcher ensures that
+every-byte of data is written correctly and prevents from accidentally writing
+files to local hard-drives.
 
 \begin{mdframed}[frametitle=Download and installation, backgroundcolor=yellow!5, roundcorner=7pt,outerlinecolor= blue!70!black,outerlinewidth=1.2]
-  Download Etcher software (e.g., \emph{Etcher-Setup-1.2.1-x64.exe}) from \url{https://etcher.io/}. Then, double-click \emph{Etcher-Setup-1.2.1-x64.exe} to install the Etcher application. 
+  Download Etcher software (\textit{e.g.,}~\emph{Etcher-Setup-1.2.1-x64.exe}) from
+  \url{https://etcher.io/}. Then, double-click \emph{Etcher-Setup-1.2.1-x64.exe}
+  to install the Etcher application.
 \end{mdframed}
 
 
 
 
-\section{Installing Operating System}
-This section will focus on how to install a linux operating system on to a BBBlue single-board computer. The two main steps that need to be followed are:
+\section{Installing Linux Operating System}
+This section will focus on how to install a linux operating system on to a
+BBBlue embedded computer. Two main steps that need to be followed are: %
+%
 \begin{enumerate}
     \item Flashing operating system (OS) on external memory card and 
     \item Flasing OS image on to BBBlue's built-in eMMC storage.
@@ -72,17 +100,27 @@ This section will focus on how to install a linux operating system on to a BBBlu
 These steps are briefly illustrated below. 
 \subsection{Flashing OS Image on External Memory Card}
 \label{sec:flashingOS}
-% \subsection{Writing Debian Image to SD Card}
-% \label{sec:writeImage2-SD-Card}
 
-A unix-like operating system, Debian\footnote{\href{https://en.wikipedia.org/wiki/Debian}{https://en.wikipedia.org/wiki/Debian}}, image will be flashed on to an external memory card (SD card). If this is the first time you are connecting a BBBlue with the laptop, you will need to update the BBBlue with the latest operating system image. Follow the steps below\footnote{These steps are adapted from \url{http://beagleboard.org/getting-started}}:
+Nowadays, there are many unix-like operating systems available. Herein, the
+BBBlue embedded computer that is used in this experiment will use the unix-like
+operating system called ``Debian''. Therefore, an image of the Debian operating
+system will be first flashed on to an external memory card (SD card). If this is the
+first time you are connecting a BBBlue with the laptop, you will need to update
+the BBBlue with the latest operating system image. Follow the steps
+below\footnote{These steps are adapted from
+  \url{http://beagleboard.org/getting-started}}:
 
 \begin{enumerate}[a)]
   
-\item Download the latest Debian\footnote{A computer operating system that is composed of free software} image from \url{https://beagleboard.org/latest-images}. It is recommended that you click \emph{Debian 9.5 2018-10-07 4GB SD IoT} to download the image \emph{bone-debian-9.5-iot-armhf-2018-10-07-4gb.img.xz}.   The IoT images provide more free disk space if you do not need to use a graphical user interface (GUI). Here, we will not be utilizing a GUI, so this IoT version is desired. 
-\item Using 7-zip, unzip the downloaded software into a image folder (\emph{bone-debian-9.5-iot-armhf-2018-10-07-4gb.img}).
+\item Download the latest Debian\footnote{A computer operating system that is
+    composed of free software} image from
+  \url{https://beagleboard.org/latest-images}. It is recommended that you
+  download the \emph{IoT} version of the image \emph{For example,
+    ``bone-debian-9.5-iot-armhf-2018-10-07-4gb.img.xz''}.    The IoT images provide more free disk space if you do not need to use a graphical user interface (GUI). Here, we will not be utilizing a GUI, so this IoT version is desired. 
+\item Using 7-zip software (assuming that 7-zip is pre-installed in the
+  computer), unzip the downloaded software into a image folder called \emph{``bone-debian-9.5-iot-armhf-2018-10-07-4gb.img''}.
 
-\item Insert a microSD card (minimum 8 GB) into SD card slot of your laptop. 
+\item Insert a microSD card (minimum 8 GB) into SD card slot of your laptop/computer. 
 \item Run the Etcher application. A small window will appear. See Figure~\ref{fig:Etcher}. %
 %
 \begin{figure}
@@ -93,21 +131,31 @@ A unix-like operating system, Debian\footnote{\href{https://en.wikipedia.org/wik
 \end{figure}
 %
 
-\item Select the Debian image from where you saved it. Lastly, make sure that you select the correct file location for your SD card. Then press Flash, this may take  around five minutes (see Figures~\ref{fig:debianImageUpload},~\ref{fig:debianImageUploadSelectDrive},~and~\ref{fig:debianImageUploadSelectDriveFlashing}). 
+\item Select the Debian image from where you saved it. Lastly, make sure that
+  you select the correct file location for your SD card. Then press Flash, this
+  may take around five minutes (see
+  Figures~\ref{fig:debianImageUpload},~\ref{fig:debianImageUploadSelectDrive},~and~\ref{fig:debianImageUploadSelectDriveFlashing}).
 %
 \begin{figure}
     \centering
-    \subfigure[][]{
-    \label{fig:debianImageUpload}
-    \includegraphics[width= 0.6\textwidth]{figs/img/Lab0/debianImageUpload}}
-    \\
-    \subfigure[][]{
-    \label{fig:debianImageUploadSelectDrive}
-    \includegraphics[width= 0.6\textwidth]{figs/img/Lab0/debianImageUploadSelectDrive}}    
-    \\
-    \subfigure[][]{
-    \label{fig:debianImageUploadSelectDriveFlashing}
-    \includegraphics[width= 0.6\textwidth]{figs/img/Lab0/debianImageUploadSelectDriveFlashing}}
+    \begin{subfigure}[b]{\linewidth}
+      \centering
+      \includegraphics[width=0.6\textwidth]{figs/img/Lab0/debianImageUpload}
+      \caption{}
+      \label{fig:debianImageUpload}
+    \end{subfigure}
+    \begin{subfigure}[b]{\linewidth}
+      \centering
+      \includegraphics[width=0.6\textwidth]{figs/img/Lab0/debianImageUploadSelectDrive}    
+      \caption{}
+      \label{fig:debianImageUploadSelectDrive}
+    \end{subfigure}
+    \begin{subfigure}[b]{\linewidth}
+      \centering
+      \includegraphics[width=0.6\textwidth]{figs/img/Lab0/debianImageUploadSelectDriveFlashing}
+      \caption{}
+      \label{fig:debianImageUploadSelectDriveFlashing}
+    \end{subfigure}
     \caption{\subref{fig:debianImageUpload} Selecting the image file,~\subref{fig:debianImageUploadSelectDrive} selecting drive of the microSD card, and~\subref{fig:debianImageUploadSelectDriveFlashing} flashing the image into the microSD card.}
     \label{fig:debianImageUpload2-MicroSD}
 \end{figure}
@@ -148,27 +196,37 @@ If you follow the above steps correctly, then flashing BBBlue's eMMC is complete
 %
 \begin{figure}
   \centering
-  \subfigure[][]{
+  \begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=0.3\textwidth,height=0.22\textheight]{figs/img/Lab0/PuTTY}
+    \caption{}
     \label{fig:PuTTY-Configuration}
-   \includegraphics[width=0.3\textwidth,height=0.22\textheight]{figs/img/Lab0/PuTTY}
- }
-   \subfigure[][]{
+  \end{subfigure}
+  \begin{subfigure}[b]{\linewidth}
+    \centering
+    \includegraphics[width=0.5\textwidth,height=0.22\textheight]{figs/img/Lab0/PuTTY_Console}
+    \caption{}
     \label{fig:PuTTY-Console}
-   \includegraphics[width=0.5\textwidth,height=0.22\textheight]{figs/img/Lab0/PuTTY_Console}
- }
+  \end{subfigure}
   \caption{\subref{fig:PuTTY-Configuration} PuTTY configuration and \subref{fig:PuTTY-Console} PuTTY console.}
   \label{fig:PuTTY1}
 \end{figure}
+%
 
 \section{BBBlue Networking}
 \label{sec:usbConn}
-To download all necessary software for the BBBlue, it needs to first be connected with the internet. Experiments with a BBBlue will rely on the proper installation of device drivers and the latest version of Debian OS image installed. The previous section was focused on installing the latest Debian image on the to the BBBlue's built-in eMMC flash storage device. In this section, the main focus will be on how to connect BBBlue to the internet. For that, a proper driver for the laptop/desktop computer is to be installed.%
+To download all necessary software from the internet, it needs to first be
+connected with the internet. Experiments with a BBBlue will rely on the proper
+installation of device drivers and the latest version of Debian OS image
+installed. The previous section was focused on installing the latest Debian
+image on the to the BBBlue's built-in eMMC flash storage device. In this
+section, the main focus will be on how to connect BBBlue to the internet. For
+that, a proper driver for the laptop/desktop computer is to be installed. %
 
 \subsection{Installing Drivers}
 \label{sec:drivers}
 
-To access BBBlue using USB connection,  
-The drivers need to be installed for the operating system to give
+The drivers may need to be installed for the operating system to give
 network-over-USB access to the BBBlue. Note that drivers may not need to be
 installed for computers operating Windows 10 or later. In case, the BBBlue is
 not recognized with USB connection, follow the steps below to install the
@@ -188,14 +246,13 @@ driver.
     \label{fig:BBBlue-Start}
 \end{figure}
 %
-\item Double-click on \emph{START.htm}.  It will take you to a web page %that will allow you to install the \underline{board drivers} for your operating system  to give network-over-USB access to the BBBlue. 
+\item Double-click on \emph{START.htm}.  It will take you to a web page.
  %
-\item Scroll down to \emph{\underline{Step \#2: Install drivers}} of the web page.  You will be given the option between a 32 and 64 bit BeagleBone Device Driver Installer: make sure you select the correct one for your system. For my case, I chose to click \emph{64-bit installer} and downloaded  and save the file \hl{\emph{BONE\_D64.exe}} on my desktop. 
-% \begin{mdframed}[roundcorner = 5pt, backgroundcolor=yellow!20]
-% \begin{verbatim}
-% BONE_D64.exe
-% \end{verbatim}
-% \end{mdframed}
+\item Scroll down to \emph{\underline{Step \#2: Install drivers}} of the web
+  page. You will be given the option between a 32- and 64-bit BeagleBone Device
+  Driver Installer. Make sure to select the correct one for your system. Here we
+  chose to download \emph{64-bit installer} and save the
+  file \hl{\emph{BONE\_D64.exe}} on in the desktop, for instance.
   
   \emph{\uppercase{\underline{do not install it yet}}.}
 
@@ -212,7 +269,10 @@ The next steps will depend on your version of Windows OS. Here, we will assume y
     \item Once selected, you will see an \emph{Advanced startup} section appear on the right hand side $\to$ click \emph{Restart now}
     \item Once your Computer has rebooted, you will need to choose the \emph{Troubleshoot} option.
     \item Next, click on \emph{Advanced} options $\to$ click \emph{Startup Settings}.
-    \item Here, you will be given a list of startup settings that you can change. The one we are looking for is \emph{Disable driver signature enforcement}. To choose this setting, you will need to press the F7 key.
+    \item Here, you will be given a list of startup settings that you can
+      change. The one we are looking for is \emph{Disable driver signature
+        enforcement}. To choose this setting, you will need to press the
+      F7 function key of the keyboard.
     \item Since we are modifying boot time configuration settings, you will need to restart your computer one last time.
 \end{enumerate}
 Your computer believes that since these drivers are not digitally signed they are a threat to your computer. For this reason, we disable device driver signature enforcement. 
@@ -220,7 +280,11 @@ Your computer believes that since these drivers are not digitally signed they ar
 
 \begin{mdframed}[frametitle=Install BeagleBone Driver and Browse BeagleBone's webserver, backgroundcolor=yellow!5, roundcorner=7pt,outerlinecolor= blue!70!black,outerlinewidth=1.2]
   \begin{itemize}
-  \item   Double-click \emph{BONE\_D64.exe} and follow the on-screen instructions. In case, the installation process is blocked due to windows security, make sure to choose \emph{Install this driver software anyway}. If drivers are installed properly, a window with all green check marks will be displayed as shown in Figure~\ref{fig:BBBlue-DriverInstalation}.
+  \item Double-click \emph{BONE\_D64.exe} and follow the on-screen instructions.
+    In case, the installation process is blocked due to windows security, make
+    sure to choose \emph{Install this driver software anyway}. If drivers are
+    installed properly, a window with all green check marks will be displayed as
+    shown in Figure~\ref{fig:BBBlue-DriverInstalation}.
     
   \item To guarantee you are connected to the board, open a web browser and browse to ``http://192.168.7.2'' You should see a message:
 
@@ -232,8 +296,9 @@ where ``0.x.x'' is the current version of the BoneScript.
   
 \end{mdframed}
 
-If there are issues browsing  ``http://192.168.7.2'', refer to Troubleshooting Problem \ref{trst:problem2}
-
+If there are issues browsing  ``http://192.168.7.2'', refer to Troubleshooting
+Problem~\ref{trst:problem2}. %
+%
   \begin{figure}
     \centering
     \includegraphics[scale=0.5]{figs/img/Lab0/BBB-DriverInstalation}
@@ -245,8 +310,11 @@ If there are issues browsing  ``http://192.168.7.2'', refer to Troubleshooting P
 % http://beagleboard.org/getting-started#update
 %===========================================================================================================
 
-\subsection{File Transfer to BBBlue using WinSCP} \label{FileTransferWinSCP}
-Files can be created and edited on the BBBlue through the terminal. However, sometimes it is more convenient to write a file on a laptop computer and then transfer the file to the BBBlue. This can be done using WinSCP client software that is installed in the laptop. To do that, follow the steps below. 
+  \subsection{File Transfer to BBBlue using WinSCP} \label{FileTransferWinSCP}
+  Files can be created and edited on the BBBlue through the terminal. However,
+  sometimes it is more convenient to write a file on a laptop computer and then
+  transfer the file to the BBBlue. This can be done using WinSCP client software
+  that is installed in the laptop that is connected to the BBBlue. To do that, follow the steps below.
 %
 \begin{enumerate}
     \item Open WinSCP
@@ -254,23 +322,30 @@ Files can be created and edited on the BBBlue through the terminal. However, som
     \item  To upload the file open WinSCP, enter hostname as ``192.168.7.2", port as ``22", username ``debian" and use the standard password ``temppwd" as shown in Figure~\ref{fig:winSCPlogin}. %
     %
     \begin{figure}
+      \begin{subfigure}[b]{\linewidth}
         \centering
         \includegraphics[width= 0.55\textwidth]{figs/img/Lab0/winSCP_login.png}
-        \caption{Login BBBlue using WinSCP.}
+        \caption{}
         \label{fig:winSCPlogin}
+      \end{subfigure}
+      \begin{subfigure}[b]{\linewidth}
+        \centering
+        \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP-C.PNG}        
+        \caption{}
+        \label{fig:winApp}
+      \end{subfigure}
+      \caption{\subref{fig:winSCPlogin} Login BBBlue using WinSCP and
+        \subref{fig:winApp} Transferring files using WinSCP application.}
     \end{figure}
     %
     
-    \item You will now be presented with a double-pane window as shown in Figure~\ref{fig:winApp}. The left pane shows the content of the local directory and the right pan shows the content of the remote (in this case, BBBlue) directory. %
-    \begin{figure}
-        \centering
-        % \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP.png}
-        \includegraphics[width= 0.65\textwidth]{figs/img/Lab0/winSCP-C.PNG}        
-        \caption{Transferring files using WinSCP application.}
-        \label{fig:winApp}
-    \end{figure}
+  \item You will now be presented with a double-pane window as shown in
+    Figure~\ref{fig:winApp}. The left pane shows the content of the local
+    directory and the right pan shows the content of the remote (in this case,
+    BBBlue) directory. %
     
-    \item Select the program file \emph{exampleProgram.c} on the left pane (which is locally stored in your laptop), and then simply drag and drop in the remote directory (here, \emph{newProjectName/}) of the BBBlue as shown in the right pane of Figure~\ref{fig:winApp}. The file is now transferred to the BBBlue.%
+    \item Select the program file \emph{exampleProgram.c} on the left pane
+      (which is locally stored in your laptop, for instance), and then simply drag and drop in the remote directory (here, \emph{newProjectName/}) of the BBBlue as shown in the right pane of Figure~\ref{fig:winApp}. The file is now transferred to the BBBlue.%
 
     
 \end{enumerate}
@@ -433,7 +508,7 @@ network, follow the steps below.
     \end{verbatim}
     to leave the Connmanctl application.
 
-    \item To connect the BBBlue to the enterprise network, a new file must be created in the \emph{/var/lib/connman} directory. This file can be created using a text editor such as Nano on the BBBlue, or it can be created on the laptop computer and transferred using WinSCP (see \ref{FileTransferWinSCP}). The filename should be the ID of the network with an extension of ``.config'' (\emph{wifi\_e0e5cf8b02c6\_4255736563757265\_managed\_ieee8021x.config}, for example). The file contents should be as follows:
+    \item To connect the BBBlue to the enterprise network, a new file must be created in the \emph{/var/lib/connman} directory. This file can be created using a text editor such as \emph{Nano} on the BBBlue, or it can be created on the laptop computer and transferred using WinSCP (see \ref{FileTransferWinSCP}). The filename should be the ID of the network with an extension of ``.config'' (\emph{wifi\_e0e5cf8b02c6\_4255736563757265\_managed\_ieee8021x.config}, for example). The file contents should be as follows:
     \begin{verbatim}
         [service_wifi_e0e5cf8b02c6_4255736563757265_managed_ieee8021x]
         Type = wifi
@@ -446,7 +521,9 @@ network, follow the steps below.
 
     The SSID of the network is the string of numbers right before the ``\_managed\_ieee8021x'' suffix. Replace ``USERNAME'' and ``PASSWORD'' with your username and password.
 
-    \item Once this file is created and located in the \emph{/var/lib/connman} directory, the BBBlue will automatically connect to the network. The green WIFI light on the BBBlue will be turned on.
+  \item Once this file is created and located in the \emph{/var/lib/connman}
+    directory, the BBBlue will automatically connect to the network. The green
+    WIFI light on the BBBlue will be turned on.
     
     \item You can now test the internet connection using a simple ping test to a web URL such as google.com:
     \begin{verbatim}
@@ -455,12 +532,6 @@ network, follow the steps below.
     You should receive a positive response from the web URL server. Now that you are connected to the internet you can run updates and install any software as required.
 \end{enumerate}
 
-%\begin{figure}[H]
- %   \centering
- %   \includegraphics[width= 0.4\textwidth]{figs/img/Lab0/InternetGate_4.png}
- %   \caption{Setting IP Address Prompt}
-  %  \label{fig:InternetGate_4}
-%\end{figure}
 
 %
 %
@@ -492,6 +563,7 @@ network, follow the steps below.
 %\subsection{Install Text Editors}
 %\label{sec:install-text-editors}
 %There are several text editors that can be used to edit/write programs/files. The default text editor is \emph{nano} that is pre-installed when the debian OS is installed. A text file, test.txt can be opened and edited by simply typing the following command on the PuTTY console terminal.
+
 %
 %\begin{verbatim}
 %nano test.txt 
@@ -515,13 +587,41 @@ Once the board is connected to the internet make sure to run the following comma
                        sudo apt-get -y upgrade
 \end{verbatim}
 %
-In addition, an open-source software for editing text will be installed. There are several software packages for a text editor that can be used to edit/write programs/files. The default software package for editing text (text editor) is \emph{nano} that is pre-installed when the debian OS is installed. A text file, \emph{test.txt} can then be opened and edited by simply typing the following command on the PuTTY console terminal. %
+
+To check the name and the version of the operating system, type any one of the
+following commands on the BBBlue terminal (after connecting to BBBlue via SSH
+using PuTTY or terminal): %
+
+\begin{center}
+  \begin{verbatim}
+    cat /etc/os-release
+    hostnamectl
+    lsb_release -a
+  \end{verbatim}
+\end{center}
+
+In addition, an open-source software for editing text will be installed. There
+are several software packages for a text editor that can be used to edit/write
+programs/files. The default software packages for editing text (text editor) are  
+\emph{nano and vi} that are pre-installed when the debian OS is installed. A text file,
+\emph{test.txt} can then be opened and edited by simply typing the following
+command on the PuTTY console terminal. %
 %
 \begin{verbatim}
     nano test.txt 
 \end{verbatim}
 %
-Emacs is another powerful text editor. This is recommended for expert linux users. This editor is not preinstalled. It can be installed using:
+
+Or, 
+
+% 
+\begin{verbatim}
+    vi test.txt 
+\end{verbatim}
+%
+
+However, new users may want to start using \emph{nano} editor. The ``vi'' editor
+is for more advanced linux users. ``Emacs'' is another powerful text editor. This is recommended for expert linux users. This editor is not preinstalled. It can be installed using:
 % sudo apt-get install emacs25 -y 
 \begin{verbatim}
     sudo apt-get install emacs 
@@ -537,7 +637,11 @@ One can open the test.txt file using the command on PuTTY console:
 \section{Running Your First Program}
 \label{sec:firstprogram}
 
-This section is dedicated to detail on how to run a program written in C programming language on to BBBlue single-board computer. For that, make sure that the package ``librobotcontrol", which contains C library programs for a \ul{robot control project.} The library functions defined in this package will be used to program BBBlue hardware. 
+This section is dedicated to detail on how to run a program written in C
+programming language on to BBBlue embedded computer. For that, make sure
+that the package ``librobotcontrol", which contains C library programs for a
+\ul{robot control project.} The library functions defined in this package will
+be used to program BBBlue hardware.
 \subsection{Library Functions Setup}
 Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} library package preinstalled. Therefore, there is no need to install this package separately. However, you will need to reconfigure \emph{librobotcontrol} package to set the device tree and configure which program to run automatically when you boot BBBlue\footnote{See \url{http://strawsondesign.com/docs/librobotcontrol/installation.html} for details.}. The steps to reconfigure the the \emph{librobotcontrol} package are given below. 
 
@@ -555,7 +659,9 @@ Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} li
     Type ``Typical Setup" into the Saved Sessions box, then hit Save. Now click open. This will take you into the PuTTY console shown in Figure~\ref{fig:PuTTYcons}. If you saved the session, PuTTY will remember your hostname settings.
     
     
-    \item Now you are in the PuTTY console. Login as ``debian" with the default password of ``temppwd". Now you are inside the BeagleBone. It will prompt you like the one shown in Figure~\ref{fig:PuTTYcons}. %
+  \item Now you are in the PuTTY console. Login as ``debian" with the default
+    password of ``temppwd". Now you are logged into the BeagleBone. It will prompt
+    you like the one shown in Figure~\ref{fig:PuTTYcons}. %
 %
     \begin{figure}[H]
         \centering
@@ -564,12 +670,14 @@ Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} li
         \label{fig:PuTTYcons}
     \end{figure}
     %
-    \item  Check your default directory location by pressing ``pwd". It should read \emph{/home/debian}. If you are not in the correct directory then you will need to navigate through the file structure. Enter``ls" to check what folders you are able to navigate to. The only options available to you should be \textbf{bin}. You can create your own directory (or folder) by typing 
+    \item  Check your default directory location by entering ``pwd''. It should
+      read \emph{/home/debian}. If you are not in the correct directory then you
+      will need to navigate through the file/folder structure. Enter ``ls'' to check what folders you are able to navigate to. The only options available to you should be \textbf{bin}. You can create your own directory (or folder) by typing 
     \begin{verbatim}
         mkdir mechatronicsLabs
     \end{verbatim}
-%    
-      Hit \emph{Enter}, then type %
+      %
+      where ``mechatronicsLabs'' is the name of the directory/folder. Hit \emph{Enter}, then type %
 \begin{verbatim}
      cd mechatronicsLabs
 \end{verbatim}
@@ -616,25 +724,31 @@ Fortunately, the latest Debian OS image comes with the \emph{librobotcontrol} li
     \item Rename the current C program using 
     \begin{verbatim}
         mv rc_project_template.c exampleProgram.c 
-        ls
     \end{verbatim}
+      then type ``ls'' to see the ``exampleProgram.c'' file in the current
+      directory. 
     \item Edit the \emph{Makefile} using nano editor:
     \begin{verbatim}
         nano Makefile
     \end{verbatim}
-    \item Replace the line \emph{TARGET = rc\_project\_template} with \underline{\emph{TARGET = newProjectName}}
+    \item Replace the line \emph{TARGET = rc\_project\_template} with
+      \underline{\emph{TARGET = newProjectName}}, where ``newProjectName'' is
+      the name of your project directory. 
     
     \item Compile the program using the command
     \begin{verbatim}
         make 
-    \end{verbatim}
+\end{verbatim}
+      This command will create an executable file called ``newProjectName''
+      (same name as that of the project directory). 
     \item Make sure that \emph{rc\_blink} program is not running on the BBBlue. If the \emph{rc\_blink} is running, then press and hold the \emph{PAU} button for four seconds. 
     
     \item Run the program in the BBBlue by typing the command
     \begin{verbatim}
         ./newProjectName 
     \end{verbatim}
-
+     which will execute the executable file ``newProjectName'' that was created
+     after executing the ``make'' command.  
 \end{enumerate}
 
 \section{Troubleshooting}
@@ -671,23 +785,23 @@ This section presents a partial list of issues that might appear while configuri
 \begin{verbatim}
 sudo shutdown now
 \end{verbatim}
-    If this command is not run, there is a chance that the Beaglebone's flash memory will be corrupted. Therefore it is very important that you run this command to turn off the board instead of simply pulling out the USB power cable.
+    if this command is not run, there is a chance that the beaglebone's flash memory will be corrupted. therefore it is very important that you run this command to turn off the board instead of simply pulling out the usb power cable.
 
 \end{enumerate}
 
-\section{Useful Links}
+\section{useful links}
 \label{sec:useful-links}
 
-Some weblinks that are useful for BBBlue are listed below. 
+some weblinks that are useful for bbblue are listed below. 
 
 \begin{enumerate}
-\item \href{http://wiki.seeedstudio.com/BeagleBone_Blue/}{http://wiki.seeedstudio.com/BeagleBone\_Blue/}
+\item \href{http://wiki.seeedstudio.com/beaglebone_blue/}{http://wiki.seeedstudio.com/beaglebone\_blue/}
   
 \item \href{https://beagleboard.org/blue}{https://beagleboard.org/blue}
   
 \item \href{http://strawsondesign.com/docs/librobotcontrol/index.html}{http://strawsondesign.com/docs/librobotcontrol/index.html}
   
-\item \href{https://www.renaissancerobotics.com/BeagleboneBlue.html}{https://www.renaissancerobotics.com/BeagleboneBlue.html}
+\item \href{https://www.renaissancerobotics.com/beagleboneblue.html}{https://www.renaissancerobotics.com/beagleboneblue.html}
 \end{enumerate}
 
 

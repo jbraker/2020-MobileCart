@@ -9,7 +9,8 @@
 
 
 
-\def\labTitle{Experiment 14: Introduction to Embedded Computer}
+% \def\labTitle{Experiment 14: Introduction to Embedded Computer}
+\def\labTitle{Experiment 15: Traffic Light Controller}
 
 
 
@@ -36,8 +37,10 @@
 \usepackage{amsmath,amssymb,bm,mathrsfs}
 \usepackage{mathtools}
 \usepackage{graphicx}
-\usepackage{caption}
-\usepackage{subfigure}
+\usepackage[labelfont=bf]{caption}
+\usepackage[list=true,listformat=simple]{subcaption}
+\captionsetup[sub]{subrefformat=parens,skip=2pt}
+% \usepackage{subfigure}
 \usepackage[table,usenames,dvipsnames]{xcolor}
 \usepackage{setspace}
 %\doublespacing
@@ -45,14 +48,28 @@
 \usepackage{array} % related to table
 \usepackage{float}
 \usepackage{verbatim}
-\usepackage{epstopdf}
+% \usepackage{epstopdf}
+% \epstopdfsetup{suffix={}}
 \usepackage{booktabs}
-\epstopdfsetup{suffix={}}
 \usepackage{siunitx}
-\sisetup{unitsep = \cdot}
+\sisetup{unitsep=\cdot}
 \usepackage{tikz}
-\usepackage[siunitx]{circuitikz}
-\def\myCktGrid{0.5}
+% load libraries
+\usetikzlibrary{backgrounds,calc,patterns,decorations.pathmorphing,decorations.markings,snakes}
+\usepackage[siunitx,smartlabels,american]{circuitikzgit}
+\def\smgrid{0.5}
+
+% For compact drawing of resistors and capacitors 1
+\ctikzset{resistors/scale=0.5,
+  capacitors/scale=0.6,
+  sources/scale=0.9} 
+\ctikzset{
+  amplifiers/fill=cyan,
+  sources/fill=green!50,
+  diodes/fill=red,
+  resistors/fill=violet,
+  logic ports/fill=blue!50,
+}
 
 
 
@@ -213,7 +230,9 @@ Dr.~\href{http://personalpages.bradley.edu/~smiah}{Suruz \textsc{Miah}}
  
 
  %%%%%
- \input{latex/labBookMechatronics/BBBlueIntroC.tex}
+ % \input{latex/labBookMechatronics/BBBlueIntroC.tex}
+
+ \input{latex/labBookMechatronics/TLC.tex}
  
 
 \bibliographystyle{plain}

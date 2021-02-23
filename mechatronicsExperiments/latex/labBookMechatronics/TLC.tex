@@ -56,8 +56,9 @@ A flashing red light turns on and off at a certain frequency. It is normally use
 \begin{figure}
     \centering
     \begin{circuitikz}[scale=1.2,american voltages]
-    \draw 
-    (0,0) to[sqV,v<=$v_s(t)$ (binary input from SBC),fill=green!50] (0,4*\smgrid) to[R,v>=$R$](5*\smgrid,4*\smgrid) to[full led,o-o,l^=~~~LED (Red),v>=~](5*\smgrid,0) to[short,-*] (0,0) node[ground]{};
+      \draw (0,0) to[sqV,v<=$v_s(t)$ (binary input from SBC),fill=green!50]
+      (0,4*\smgrid) to[R,v>=$R$](5*\smgrid,4*\smgrid) to[full led,o-o,l^=~~~LED
+      (Red),v>=~](5*\smgrid,0) to[short,-*] (0,0) node[ground]{};
     \end{circuitikz}
     \caption{Circuit for emulating a flashing light.}
     \label{fig:flashingLED1}
