@@ -47,7 +47,27 @@ Each LED on the BBBlue board is labeled so that it is easily identfied with the 
 \end{enumerate}
 %
 
-Before implementing the algorithms that emulate the above applications, it is important to review the working principles of these applications. 
+Before implementing the algorithms that emulate the above applications, it is important to review the working principles of these applications.
+
+\subsection{GPIO Pins}
+\label{sec:GPIOPins}
+The BBBlue board has several GPIO pins that can be used to receive inputs or drive outputs. The pins accessible on ports GP0 and GP1 are shown in \autoref{fig:GPIO_pins}. These pins can be connected to external hardware (pushbuttons, LEDs, etc) to provide added functionality to the board.
+%
+\begin{figure}
+  \centering
+  \includegraphics[width= 0.5\textwidth]{figs/img/Lab1/GPIO_pins.png}
+  \caption{BBBlue GPIO Ports 0 and 1}
+  \label{fig:GPIO_pins}
+\end{figure}
+%
+The GPIO pins are controlled using the following functions (from \emph{rc/gpio.h}):
+\begin{verbatim}
+  rc_gpio_init (int chip, int pin, int handle_flags)
+  rc_gpio_get_value (int chip, int pin)
+  rc_gpio_set_value (int chip, int pin, int value)
+  rc_gpio_cleanup (int chip, int pin)
+\end{verbatim}
+Each of these functions requires inputs of both a chip and a pin. In \autoref{fig:GPIO_pins}, the GPIO pins are labeled as \emph{GPIOx\_y}, where \emph{x} is the chip number, and \emph{y} is the pin number. For example, pin 4 of GP1 is on pin 1 of chip 3. When the pin is initialized, it must be configured as either an input or an output by passing either \emph{GPIOHANDLE\_REQUEST\_INPUT} or \emph{GPIOHANDLE\_REQUEST\_OUTPUT} for the \emph{handle\_flags} parameter of \emph{rc\_gpio\_init}. The value of a pin configured as an input can be obtained as the return value of the \emph{rc\_gpio\_get\_value} function. To set the output value of a pin configured as an output, the \emph{rc\_gpio\_set\_value} function is used. If a zero is passed as the value, the GPIO pin is set to off (inactive), while a nonzero value turns the pin on (active). The \emph{rc\_gpio\_cleanup} function is to be called at the end of the program to properly close out the GPIO pin before exiting.
 
 \subsection{Flashing Red Light}
 \label{sec:FlashingRedLight}
@@ -64,9 +84,7 @@ A flashing red light turns on and off at a certain frequency. It is normally use
     \label{fig:flashingLED1}
 \end{figure}
 %
-Therefore, the input is a binary voltage that is to be sent to turn on and off of an LED using an algorithm to be implemented on BBBlue. The LED can be chosen from one of the onboard LEDs. Note that resistor is not needed to be connected if an onbard LED is used. 
-
-
+Therefore, the input is a binary voltage that is to be sent to turn on and off of an LED using an algorithm to be implemented on BBBlue. The LED can be chosen from one of the onboard LEDs. Note that resistor is not needed to be connected if an onbard LED is used. If an external LED is used, a GPIO pin must be used to drive the LED.
 
 \subsection{Traffic Light Controller}
 \label{sec:voltageDivider}
