@@ -22,24 +22,7 @@ The following parts are required to conduct this laboratory assignment. %
 \section{Background}
 \label{sec:background}
 
-This laboratory assignment is primarily meant to use some C library functions of the robotics cape package, \emph{librobotcontrol}, for controlling onboard LEDs on the BBBlue single-board computer (SBC).  The \emph{librobotcontrol} package is pre-installed in the BBBlue board. The BBBlue board has eleven LEDs that are accessed using the following application programming interfaces (APIs).
-\begin{center}
-\begin{verbatim}
-RC_LED_GREEN 	
-RC_LED_RED 	
-RC_LED_USR0 	
-RC_LED_USR1 	
-RC_LED_USR2 	
-RC_LED_USR3 	
-RC_LED_BAT25 	
-RC_LED_BAT50 	
-RC_LED_BAT75 	
-RC_LED_BAT100 	
-RC_LED_WIFI 
-\end{verbatim}  
-\end{center}
-%
-Each LED on the BBBlue board is labeled so that it is easily identfied with the API name mentioned above. In this laboratory assignment, we shall focus on implementing  algorithms that emulate the following applications:
+This laboratory assignment is primarily meant to use some C library functions of the robotics cape package, \emph{librobotcontrol}, for controlling onboard LEDs and GPIO pins on the BBBlue single-board computer (SBC). The \emph{librobotcontrol} package is pre-installed in the BBBlue board. In this laboratory assignment, we shall focus on implementing  algorithms that emulate the following applications:
 %
 \begin{enumerate}
     \item Flashing red light and 
@@ -48,6 +31,36 @@ Each LED on the BBBlue board is labeled so that it is easily identfied with the 
 %
 
 Before implementing the algorithms that emulate the above applications, it is important to review the working principles of these applications.
+
+\subsection{LEDs}
+\label{sec:LEDs}
+The BBBlue board has eleven LEDs that are accessed using the following application programming interfaces (APIs).
+\begin{center}
+\begin{verbatim}
+RC_LED_GREEN
+RC_LED_RED
+RC_LED_USR0
+RC_LED_USR1
+RC_LED_USR2
+RC_LED_USR3
+RC_LED_BAT25
+RC_LED_BAT50
+RC_LED_BAT75
+RC_LED_BAT100
+RC_LED_WIFI
+\end{verbatim}
+\end{center}
+%
+Each LED on the BBBlue board is labeled so that it is easily identfied with the API name mentioned above. These LEDs are controlled using the following functions (from \emph{rc/led.h}):
+\begin{verbatim}
+  rc_led_set (rc_led_t led, int value)
+  rc_led_cleanup (void)
+\end{verbatim}
+The \emph{rc\_led\_set} function is used to turn an LED on or off. To call this function, the name of the LED to control is passed as the \emph{led} argument, and the desired state is passed as the \emph{value} (0 for off, nonzero for on). For example, the following statement would turn on the onboard green LED:
+\begin{verbatim}
+  rc_led_set (RC_LED_GREEN, 1);
+\end{verbatim}
+To properly close out the LEDs before exiting the program, the \emph{rc\_led\_cleanup} function should be called at the end of the program.
 
 \subsection{GPIO Pins}
 \label{sec:GPIOPins}
@@ -67,11 +80,17 @@ The GPIO pins are controlled using the following functions (from \emph{rc/gpio.h
   rc_gpio_set_value (int chip, int pin, int value)
   rc_gpio_cleanup (int chip, int pin)
 \end{verbatim}
-Each of these functions requires inputs of both a chip and a pin. In \autoref{fig:GPIO_pins}, the GPIO pins are labeled as \emph{GPIOx\_y}, where \emph{x} is the chip number, and \emph{y} is the pin number. For example, pin 4 of GP1 is on pin 1 of chip 3. When the pin is initialized, it must be configured as either an input or an output by passing either \emph{GPIOHANDLE\_REQUEST\_INPUT} or \emph{GPIOHANDLE\_REQUEST\_OUTPUT} for the \emph{handle\_flags} parameter of \emph{rc\_gpio\_init}. The value of a pin configured as an input can be obtained as the return value of the \emph{rc\_gpio\_get\_value} function. To set the output value of a pin configured as an output, the \emph{rc\_gpio\_set\_value} function is used. If a zero is passed as the value, the GPIO pin is set to off (inactive), while a nonzero value turns the pin on (active). The \emph{rc\_gpio\_cleanup} function is to be called at the end of the program to properly close out the GPIO pin before exiting.
+Each of these functions requires inputs of both a chip and a pin. In \autoref{fig:GPIO_pins}, the GPIO pins are labeled as \emph{GPIOx\_y}, where \emph{x} is the chip number, and \emph{y} is the pin number. For example, pin 4 of GP1 is on pin 1 of chip 3. When the pin is initialized, it must be configured as either an input or an output by passing either \emph{GPIOHANDLE\_REQUEST\_INPUT} or \emph{GPIOHANDLE\_REQUEST\_OUTPUT} for the \emph{handle\_flags} parameter of \emph{rc\_gpio\_init}. For example, the following statement would be used to set pin 4 of GP1 as an output:
+\begin{verbatim}
+  rc_gpio_init (3, 1, GPIOHANDLE_REQUEST_OUTPUT);
+\end{verbatim}
+The value of a pin configured as an input can be obtained as the return value of the \emph{rc\_gpio\_get\_value} function. To set the output value of a pin configured as an output, the \emph{rc\_gpio\_set\_value} function is used. If a zero is passed as the value, the GPIO pin is set to off (inactive), while a nonzero value turns the pin on (active). To properly close out the GPIO pin before exiting, the \emph{rc\_gpio\_cleanup} function should be called at the end of the program on each GPIO pin that was used.
+
+NOTE: The LED\_RED and LED\_GRN pins of GP1 are connected to the onboard red and green LEDs, and thus are controlled using the LED functions rather than the GPIO functions. See \autoref{sec:LEDs} for details on using the LEDs.
 
 \subsection{Flashing Red Light}
 \label{sec:FlashingRedLight}
-A flashing red light turns on and off at a certain frequency. It is normally used at an  intersection of roads where traffic comes to a complete stop. A circuit that emulates a flashing red light is shown in Figure~\ref{fig:flashingLED1}.  A square wave voltage $v_s(t)$ for $t\ge 0$ mimics ON-OFF signals provided by the SBC. 
+A flashing red light turns on and off at a certain frequency. It is normally used at an  intersection of roads where traffic comes to a complete stop. A circuit that emulates a flashing red light is shown in \autoref{fig:flashingLED1}.  A square wave voltage $v_s(t)$ for $t\ge 0$ mimics ON-OFF signals provided by the SBC. 
 %
 \begin{figure}
     \centering
@@ -88,7 +107,7 @@ Therefore, the input is a binary voltage that is to be sent to turn on and off o
 
 \subsection{Traffic Light Controller}
 \label{sec:voltageDivider}
-In this part, a simple traffic light control logic is to be implemented on a SBC. For simplicity, we will be considering traffic lights at the intersection of two one-way roads: East-West (EW) and North-South (NS) as shown in Figure~\ref{fig:intersection1}. Three LEDs are used to indicate the traffic signals for each road: one Green, one Yellow, and  one Red. At any given time, there is an \emph{active direction} with its lights set to green  and an \emph{inactive direction} with its lights set to red. In the active direction, the duration of Green, Yellow, and Red lights are $10~[\second]$ (state\#1), $4~[\second]$ (state\#2) and $2~[\second]$ (state\#3), respectively.  The duration of Red light in the inactive direction is $16~[\second].$ The active and inactive directions are then switched. A full light cycle passes through three states as described in Table~\ref{tab:traffic1}, where logic $1(0)$ represent that the corresponding LED  is ON (OFF). %
+In this part, a simple traffic light control logic is to be implemented on a SBC. For simplicity, we will be considering traffic lights at the intersection of two one-way roads: East-West (EW) and North-South (NS) as shown in \autoref{fig:intersection1}. Three LEDs are used to indicate the traffic signals for each road: one Green, one Yellow, and  one Red. At any given time, there is an \emph{active direction} with its lights set to green  and an \emph{inactive direction} with its lights set to red. In the active direction, the duration of Green, Yellow, and Red lights are $10~[\second]$ (state\#1), $4~[\second]$ (state\#2) and $2~[\second]$ (state\#3), respectively.  The duration of Red light in the inactive direction is $16~[\second].$ The active and inactive directions are then switched. A full light cycle passes through three states as described in \autoref{tab:traffic1}, where logic $1(0)$ represent that the corresponding LED  is ON (OFF). %
 %
 \begin{figure}
   \centering
@@ -151,7 +170,7 @@ Inactive (\textcolor{ForestGreen}{Green}, \textcolor{YellowOrange}{Yellow},\text
 
 \section{Laboratory Work}
 
-You are to write a C program in a BBBlue board so that it practically implements a traffic light control logic at an intersection of  two one-way roads. Use the onboard LEDs of the BBBlue to configure the traffic lights as illustrated in Table~\ref{tab:tlc2}. %
+You are to write a C program in a BBBlue board so that it practically implements a traffic light control logic at an intersection of  two one-way roads. Use the onboard LEDs of the BBBlue to configure the traffic lights as illustrated in \autoref{tab:tlc2}. %
 %
 \begin{table}
   \centering
@@ -168,12 +187,12 @@ You are to write a C program in a BBBlue board so that it practically implements
   \end{tabular}
 \end{table}
 %
-State durations of traffic lights are given in  Table~\ref{tab:traffic1}. The program should perform the  following operations.
+State durations of traffic lights are given in  \autoref{tab:traffic1}. The program should perform the  following operations.
 
 
 \begin{enumerate}
 \item When PAU button is pressed, the LEDs in active and inactive directions
-  will flash as per the state durations given in Table~\ref{tab:traffic1}.
+  will flash as per the state durations given in \autoref{tab:traffic1}.
 \item When MOD button is pressed, all LEDs are OFF and the program terminates.
 \end{enumerate}
  
